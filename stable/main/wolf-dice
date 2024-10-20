@@ -1,0 +1,1556 @@
+Object.defineProperty(String.prototype, "capitalize", {
+  value: function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  },
+  enumerable: false
+});
+client = null;
+darkMode = false;
+mode = "lua";
+game = "dice";
+run = false;
+win = false;
+sOW = false;
+minbet = 0;
+maxbet = 0;
+startBalance = 0;
+percentWagered = 0;
+percentProfit = 0;
+luaEditor = null;
+jsEditor = null;
+stopHistory = false;
+stopLog = false;
+stopChart = false;
+maxRows = 200;
+chart = null;
+betsChart = 0;
+profitChart = 0;
+dps = [];
+coins = [];
+coin = null;
+currency = null;
+casino = null;
+balance = 0;
+minbalance = 0;
+maxbalance = 0;
+minprofit = 0;
+maxprofit = 0;
+basebet = 0;
+nextbet = 0;
+chance = 0;
+havePlinkoRows = false;
+plinkoRow = 8;
+plinkoRisk = "low";
+bethigh = true;
+target = 0;
+result = 0;
+bets = 0;
+wins = 0;
+losses = 0;
+profit = 0;
+wagered = 0;
+maxBetAmount = 0;
+maxLosseAmount = 0;
+currentprofit = 0;
+partialprofit = 0;
+winstreak = 0;
+losestreak = 0;
+currentstreak = 0;
+maxwinstreak = 0;
+maxlosestreak = 0;
+previousbet = 0;
+lastBet = {
+  amount: 0,
+  Amount: 0,
+  chance: 0,
+  Chance: 0,
+  roll: 0,
+  Roll: 0,
+  profit: 0,
+  Profit: 0,
+  target: 0,
+  Target: 0,
+  result: 0,
+  Result: 0,
+  nonce: 0,
+  Nonce: 0,
+  id: "",
+  Id: ""
+};
+scriptname = "";
+decimalAmountView = 8;
+decimalChanceView = 2;
+decimalTargetResult = 2;
+wdbSpeed = null;
+wdbTimer = null;
+wdbSound = new Object(new Audio(WDB_LIB + "/ching.mp3"));
+wdbUI = "<style>\n::-webkit-scrollbar {\n  width: 8px;\n  height: 8px;\n}\n\n::-webkit-scrollbar-track {\n  background: #f1f1f1;\n}\n\n::-webkit-scrollbar-thumb {\n  background: #888;\n}\n\n::-webkit-scrollbar-thumb:hover {\n  background: #555;\n}\n\n#wdb {\n  all: revert;\n  width: 1000px;\n  font-family: \"Courier New\", monospace;\n  font-size: 11px!important;\n  text-align: left;\n  background: #fff;\n  color: #000;\n  line-height: 1.5!important;\n  top: 5px;\n  left: 5px;\n  padding: 5px;\n  position: absolute;\n  z-index: 2147483002;\n  border: 1px solid #ccc;\n  border-radius: 3px;\n}\n\n#wdbHeader,\n#wdbFooter {\n  cursor: move;\n}\n\n.wdb-toggle {\n  cursor: pointer;\n  padding: 5px;\n  z-index: 2147483003;\n}\n\n#wdbMenu {\n  padding: 3px;\n}\n\n#wdbMenu select,\n#wdbMenu span input[type=number] {\n  all: revert;\n  background: #fff!important;\n  padding: 3px 5px;\n  border: 1px solid #ccc!important;\n  border-radius: 0!important;\n  border-radius: 3px!important;\n}\n\n#wdbMenu span input[type=number] {\n  width: 86px;\n}\n\n#wdbMenu select:focus {\n  color: black!important;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 45px;\n  height: 19px;\n}\n\n.switch input { \n  opacity: 0;\n  width: 0;\n  height: 0;\n}\n\n.slider {\n  all: revert;\n  background: #ccc;\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  border-radius: 3px;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  content: \"\";\n  position: absolute;\n  background: white;\n  height: 13px;\n  width: 13px;\n  left: 3px;\n  bottom: 3.5px;\n  border-radius: 3px;\n  -webkit-transition: .3s;\n  transition: .3s;\n}\n\ninput:checked + .slider {\n  background: linear-gradient(to right, #ffb347 0%, #ffcc33  51%, #ffb347  100%);;\n}\n\ninput:focus + .slider {\n  box-shadow: 0 0 1px #ffc107;\n}\n\ninput:checked + .slider:before {\n  -webkit-transform: translateX(26px);\n  -ms-transform: translateX(26px);\n  transform: translateX(26px);\n}\n\n.btn-grad {\n  all: revert;\n  cursor: pointer;\n  background-image: linear-gradient(to right, #ffb347 0%, #ffcc33  51%, #ffb347  100%);\n  text-align: center;\n  transition: 0.5s;\n  padding: 3px;\n  background-size: 200% auto;\n  border: #ffc107;\n  border-radius: 3px;\n}\n\n.btn-grad:hover {\n  background-position: right center;\n  text-decoration: none;\n}\n\n.btn-grad:active {\n  opacity: .65;\n}\n\n.btn-grad:disabled {\n  cursor: auto;\n  opacity: .65;\n  color: #fff;\n}\n\n#wdbOpenLUAScript,\n#wdbOpenJSScript {\n  all: revert;\n}\n\n#wdbChart,\n#wdbWrapHistory {\n  height: 190px;\n  padding: 3px;\n}\n\n#wdbWrapHistory {\n  overflow-x: auto;\n}\n\n#wdbWrapHistory table {\n  border-collapse: collapse;\n}\n\n#wdbWrapHistory table thead tr th {\n  font-weight: normal;\n  text-align: left;\n  padding: 1px;\n  border: 1px solid #ccc;\n  white-space: nowrap;\n  color: #000;\n}\n\n#wdbHistory tr {\n  border-bottom: 1px solid #fff;\n  color: #000!important;\n}\n\n#wdbHistory tr:last-child {\n  border-bottom: 1px solid #ccc;\n}\n\n#wdbHistory tr td {\n  all: revert;\n  white-space: nowrap;\n  padding: 1.5px;\n  border-right: 1px solid #fff;\n  border-left: 1px solid #fff;\n}\n\n#wdbHistory tr td:first-child {\n  border-left: 1px solid #ccc;\n}\n\n#wdbHistory tr td:last-child {\n  border-right: 1px solid #ccc;\n}\n\n#wdbHistory tr td input {\n  all: revert;\n}\n\n#wdbAdvancedMode,\n#wdbWrapLog,\n#wdbWrapVariables,\n#wdbWrapFunctions,\n#wdbWrapTips {\n  overflow: scroll;\n  height: 300px;\n}\n\n#wdbWrapVariables pre,\n#wdbWrapFunctions pre,\n#wdbWrapTips pre {\n  all: revert;\n  background: #fff;\n  color: #000;\n  margin: 0;\n}\n\n#wdbWrapLog code {\n  all: revert;\n}\n\n#wdbLog li {\n  list-style: none;\n  padding-left: 0;\n}\n\n#wdbOpenScript {\n  all: revert;\n}\n\n.wdb-stats,\n.wdb-flex-container {\n  display: flex;\n  align-items: stretch;\n}\n\n.wdb-stats div {\n  flex-grow: 1;\n  padding: 2px 32px;\n}\n\n.wdb-stats div li {\n  list-style: none;\n}\n\n.wdb-advanced-item {\n  line-height: 2;\n  padding: 3px 0;\n  border-bottom: 1px solid #e7e7e7;\n}\n\n.wdb-advanced-item:last-child {\n  border: none;\n}\n\n.wdb-advanced-item input {\n  all: revert;\n}\n\n.wdb-advanced-item input[type=number] {\n  width: 86px;\n}\n\n.clearfix::after {\n  content: \"\";\n  clear: both;\n  display: table;\n}\n\n.float-left {\n  float: left!important;\n}\n\n.float-right {\n  float: right!important;\n}\n\n.wdb-menu2 {\n  display: flex;\n}\n\n.wdb-menu2 span {\n  padding: 3.5px;\n  text-align: center;\n}\n\n#wdbTabMenu,\n#wdbControlMenu {\n  display: flex; flex-wrap: wrap;\n  margin-top: 3px;\n}\n\n#wdbTabMenu button,\n#wdbControlMenu button {\n  flex-basis: 0;\n  flex-grow: 1;\n  margin: 3px;\n}\n\n.CodeMirror {\n  height: 269px;\n}\n</style>\n\n<div id=\"wdb\">\n  <div id=\"wdbHeader\">\n    <div class=\"clearfix\">\n      <div class=\"float-left\" style=\"padding-left: 5px;\">\n        Web DiceBot | " + CASINO_GAME + " | " + WDB_MODE + " v" + WDB_VERSION + "\n      </div>\n      <div class=\"float-right\">\n        <span class=\"wdb-toggle\" id=\"wdbToggleMinimal\" onclick=\"toggleMinimalBot(this)\">▼</span>\n      </div>\n    </div>\n  </div>\n\n  <div id=\"wdbMain\">\n    <div id=\"wdbMenu\">\n      <select id=\"wdbMenuMode\" class=\"wdb-select\" onchange='toggleMode(this.value)'>\n        <option value=\"lua\">LUA Mode</option>\n        <option value=\"js\">JS Mode</option>\n        <option value=\"advanced\">Advanced Mode</option>\n      </select>\n      <select id=\"wdbMenuCoin\" class=\"wdb-select\" onchange='changeCoin()'>\n        <option>Loading...</option>\n      </select>\n      <span>\n        Max Record\n        <input type=\"number\" id=\"wdbMaxRows\" value=\"200\" onchange=\"changeMaxRows()\" />\n      </span>\n      <span id=\"scriptName\"></span>\n    </div>\n\n    <div class=\"wdb-menu2\">\n      <span>\n        Dark Mode<br />\n        <label class=\"switch\">\n          <input type=\"checkbox\" onchange=\"toggleDarkMode()\">\n          <span class=\"slider\"></span>\n        </label>\n      </span>\n\n      <span>\n        Show Stats<br />\n        <label class=\"switch\">\n        <input id=\"wdbToggleShowStats\" type=\"checkbox\" onchange=\"toggleShow('stats')\" checked=\"\">\n        <span class=\"slider\"></span>\n        </label>\n      </span>\n\n      <span>\n        Show Chart<br />\n        <label class=\"switch\">\n        <input id=\"wdbToggleShowChart\" type=\"checkbox\" onchange=\"toggleShow('chart')\" checked=\"\">\n        <span class=\"slider\"></span>\n        </label>\n      </span>\n\n      <span>\n        Show History<br />\n        <label class=\"switch\">\n        <input id=\"wdbToggleShowHistory\" type=\"checkbox\" onchange=\"toggleShow('history')\" checked=\"\">\n        <span class=\"slider\"></span>\n        </label>\n      </span>\n      \n      <span>\n        Live Chart<br />\n        <label class=\"switch\">\n        <input id=\"wdbToggleLiveChart\" type=\"checkbox\" onchange=\"toggleLive('chart')\" checked=\"\">\n        <span class=\"slider\"></span>\n        </label>\n      </span>\n\n      <span>\n        Live History<br />\n        <label class=\"switch\">\n        <input id=\"wdbToggleLiveHistory\" type=\"checkbox\" onchange=\"toggleLive('history')\" checked=\"\">\n        <span class=\"slider\"></span>\n        </label>\n      </span>\n\n      <span>\n        Live Log<br />\n        <label class=\"switch\">\n        <input id=\"wdbToggleLiveLog\" type=\"checkbox\" onchange=\"toggleLive('log')\" checked=\"\">\n        <span class=\"slider\"></span>\n        </label>\n      </span>\n      \n      <span style=\"padding-top: 19px;\">\n        <button class=\"btn-grad\" onclick=\"selectFunction('resetstats')\">Reset Stats</button>\n      </span>\n      <span style=\"padding-top: 19px;\">\n        <button class=\"btn-grad\" onclick=\"selectFunction('resetchart')\">Reset Chart</button>\n      </span>\n      <span style=\"padding-top: 19px;\">\n        <button class=\"btn-grad\" onclick=\"selectFunction('resethistory')\">Reset History</button>\n      </span>\n      <span style=\"padding-top: 19px;\">\n        <button class=\"btn-grad\" onclick=\"selectFunction('resetlog')\">Reset Log</button>\n      </span>\n      <span style=\"padding-top: 19px;\">\n        <button class=\"btn-grad\" onclick=\"selectFunction('resetseed')\">Reset Seed</button>\n      </span>\n      <span style=\"padding-top: 19px;\">\n        <button class=\"btn-grad\" onclick=\"selectFunction('resetall')\">Reset All</button>\n      </span>\n    </div>\n\n    <div class=\"wdb-stats\" id=\"wdbStats\">\n      <div>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Time:</span>\n          <span class=\"float-right\"><span id=\"wdbTime\">0:0:0:0</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Balance:</span>\n          <span class=\"float-right\"><span id=\"wdbBalance\">0.00000000</span></span>\n        </li>\n        \n        <li class=\"clearfix\">\n          <span class=\"float-left\">Min Balance:</span>\n          <span class=\"float-right\"><span id=\"wdbMinBalance\">0.00000000</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Max Balance:</span>\n          <span class=\"float-right\"><span id=\"wdbMaxBalance\">0.00000000</span></span>\n        </li>\n      </div>\n      \n      <div>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Wagered:</span>\n          <span class=\"float-right\">(<span id=\"wdbPercentWagered\">0.00</span>x) <span id=\"wdbWagered\">0.00000000</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Profit:</span>\n          <span class=\"float-right\" id=\"wdbWrapPercentProfit\">(<span id=\"wdbPercentProfit\">0.00</span>%) <span id=\"wdbProfit\">0.00000000</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Min Profit:</span>\n          <span class=\"float-right\"><span id=\"wdbMinProfit\">0.00000000</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Max Profit:</span>\n          <span class=\"float-right\"><span id=\"wdbMaxProfit\">0.00000000</span></span>\n        </li>\n      </div>\n\n      <div>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Bets:</span>\n          <span class=\"float-right\"><span id=\"wdbBets\">0</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Losses:</span>\n          <span class=\"float-right\"><span id=\"wdbLosses\">0</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Max Bet:</span>\n          <span class=\"float-right\"><span id=\"wdbHighBet\">0.00000000</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Max Lose:</span>\n          <span class=\"float-right\"><span id=\"wdbHighLose\">0.00000000</span></span>\n        </li>\n      </div>\n\n      <div>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Wins:</span>\n          <span class=\"float-right\"><span id=\"wdbWins\">0</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Current Streak:</span>\n          <span class=\"float-right\"><span id=\"wdbCurrentStreak\">0</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Max Win Streak:</span>\n          <span class=\"float-right\"><span id=\"wdbHighWinStreak\">0</span></span>\n        </li>\n        <li class=\"clearfix\">\n          <span class=\"float-left\">Max Lose Streak:</span>\n          <span class=\"float-right\"><span id=\"wdbHighLoseStreak\">0</span></span>\n        </li>\n      </div>\n    </div>\n\n    <div class=\"wdb-flex-container\" id=\"wdbWrapControl\">\n      <div style=\"flex-grow: 1; width: 50%;\">\n        <div id=\"wdbChart\"></div>\n\n        <div id=\"wdbWrapHistory\">\n          <table>\n            <thead>\n              <tr>\n                <th>Bets</th>\n                <th>Amount</th>\n                <th>High</th>\n                <th>Target Chance</th>\n                <th>Roll Chance</th>\n                <th>Profit</th>\n                <th>Target Number</th>\n                <th>Roll Number</th>\n                <th>Nonce</th>\n                <th>Bet ID</th>\n              </tr>\n            </thead>\n            <tbody id=\"wdbHistory\"></tbody>\n          </table>\n        </div>\n      </div>\n\n      <div style=\"flex-grow: 1; width: 50%; padding-left: 5px;\">\n        <div id=\"wdbTabMenu\">\n          <button class=\"btn-grad\" id=\"wdbShowMode\" onclick=\"toggleNav('mode')\">Mode</button>\n          <button class=\"btn-grad\" id=\"wdbShowLog\" onclick=\"toggleNav('log')\">Log</button>\n          <button class=\"btn-grad\" id=\"wdbShowVariables\" onclick=\"toggleNav('variables')\">Variables</button>\n          <button class=\"btn-grad\" id=\"wdbShowFunctions\" onclick=\"toggleNav('functions')\">Functions</button>\n          <button class=\"btn-grad\" id=\"wdbShowTips\" onclick=\"toggleNav('tips')\">Tips</button>\n        </div>\n\n        <div>\n          <div id=\"wdbWrapMode\">\n            <div id=\"wdbLUAMode\">\n              <div style=\"padding: 5px 2px 5px\">\n                <button class=\"btn-grad\" id=\"wdbSaveScriptButton\" onclick=\"saveScript()\">Save</button>\n                <input style=\"margin: 0 3px;\" type=\"file\" id=\"wdbOpenLUAScript\" accept=\".txt, .lua\" />\n              </div>\n              <textarea id=\"wdbScriptBoxLUA\">scriptname='example LUA script'\nchance=49.5\nbethigh=true\nbasebet=0.00000001\nnextbet=basebet\n-- currency='trx'\n-- log(casino)\n-- plinkoRow=8 -- depend dice site, only for plinko game\n-- plinkoRisk='low' -- low, medium, high; only for plinko game\n\nfunction dobet()\n  -- log('profit: '..profit)\n  -- sleep(0.2)\n  if (win) then\n    nextbet=basebet\n  else\n    nextbet=previousbet*2\n  end\nend</textarea>\n            </div>\n\n            <div id=\"wdbJSMode\">\n              <div style=\"padding: 5px 2px 5px\">\n                <button class=\"btn-grad\" id=\"wdbSaveScriptButton\" onclick=\"saveScript()\">Save</button>\n                <input style=\"margin: 0 3px;\" type=\"file\" id=\"wdbOpenJSScript\" accept=\".txt, .js\" />\n              </div>\n              <textarea id=\"wdbScriptBoxJS\">scriptname='example JS script'\nchance=49.5\nbethigh=true\nbasebet=0.00000001\nnextbet=basebet\n// currency='trx'\n// log(casino)\n// plinkoRow=8 // depend dice site, only for plinko game\n// plinkoRisk='low' // low, medium, high, extreme; depend dice site and only for plinko game\n\nasync function dobet() {\n  // log('profit: ' + profit)\n  // await sleep(0.2)\n  if (win) {\n    nextbet=basebet\n  } else {\n    nextbet=previousbet*2\n  }\n}</textarea>\n            </div>\n\n            <div id=\"wdbAdvancedMode\" class=\"wdb-advanced\">\n              <div class=\"wdb-advanced-item\">\n                Chance <input type=\"number\" id=\"advancedChance\" value=\"49.5\" />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                Base bet\n                <input type=\"number\" id=\"advancedBaseBet\" value=\"0.00000001\" />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                Bethigh\n                <input type=\"checkbox\" id=\"advancedBetHigh\" checked />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedChanceOnWinCheck\" />\n                Set chance to\n                <input type=\"number\" value=\"45.5\" id=\"advancedChanceOnWin\" />\n                on\n                <input type=\"number\" value=\"1\" id=\"advancedChanceOnWinBets\" />\n                win\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedChanceOnLoseCheck\" />\n                Set chance to\n                <input type=\"number\" value=\"50.5\" id=\"advancedChanceOnLose\" />\n                on\n                <input type=\"number\" value=\"1\" id=\"advancedChanceOnLoseBets\" />\n                lose\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedMultiOnWinCheck\" />\n                Multiplier\n                <input type=\"number\" id=\"advancedMultiOnWin\" value=\"2\" />\n                on\n                <input type=\"number\" id=\"advancedMultiOnWinBets\" value=\"1\" />\n                win\n              </div>\n              \n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedMultiOnLoseCheck\" checked/>\n                Multiplier\n                <input type=\"number\" id=\"advancedMultiOnLose\" value=\"2\" />\n                on\n                <input type=\"number\" id=\"advancedMultiOnLoseBets\" value=\"1\" />\n                lose\n              </div>\n              \n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedBetHighOnBetCheck\" />\n                Switch bethigh on\n                <input type=\"number\" value=\"1\" id=\"advancedBetHighOnBet\" />\n                bet\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedBetHighOnWinCheck\" />\n                Switch bethigh on\n                <input type=\"number\" value=\"1\" id=\"advancedBetHighOnWin\" />\n                win\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedBetHighOnLoseCheck\" />\n                Switch bethigh on\n                <input type=\"number\" value=\"1\" id=\"advancedBetHighOnLose\" />\n                lose\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedBetHighOnProfitCheck\" />\n                Switch bethigh on profit\n                <input\n                  type=\"number\"\n                  value=\"0.00000010\"\n                  id=\"advancedBetHighOnProfit\"\n                  class=\"wdb--input wdb-w-40\"\n                />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"resetstatsOnProfitCheck\" />\n                Reset stats on profit\n                <input\n                  type=\"number\"\n                  value=\"0.00000010\"\n                  id=\"resetstatsOnProfit\"\n                  class=\"wdb--input wdb-w-40\"\n                />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedStopRollNumberCheck\" />\n                Stop on roll number\n                <input type=\"number\" value=\"49.5\" id=\"advancedStopRollNumber\" />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedStopAfterStreakCheck\" />\n                Stop on current streak\n                <input type=\"number\" value=\"-2\" id=\"advancedStopAfterStreak\" />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedStopOnBetsCheck\" />\n                Stop on\n                <input type=\"number\" value=\"10\" id=\"advancedStopOnBets\" /> bet\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedStopOnWinsCheck\" />\n                Stop on\n                <input type=\"number\" value=\"1\" id=\"advancedStopOnWins\" /> win\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"advancedStopOnLoseCheck\" />\n                Stop on\n                <input type=\"number\" value=\"1\" id=\"advancedStopOnLose\" /> lose\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"stopOnProfitCheck\" />\n                Stop on profit\n                <input type=\"number\" value=\"0.00000010\" id=\"stopOnProfit\" />\n              </div>\n\n              <div class=\"wdb-advanced-item\">\n                <input type=\"checkbox\" id=\"stopOnBalanceCheck\" />\n                Stop on balance\n                <input type=\"number\" value=\"0.00000010\" id=\"stopOnBalance\" />\n              </div>\n            </div>\n          </div>\n\n          <div id=\"wdbWrapLog\">\n            <code id=\"wdbLog\"></code>\n          </div>\n\n          <div id=\"wdbWrapVariables\">\n            <pre>chance : % win chance in next game\nplinkoRow : Plinko rows, only for plinko game, some site not have\nplinkoRisk : risk level for plinko game (low, medium, high)\nbethigh : Bet side in next game (true is over/above, false is under/below)\nminbet : Minimum amount to bet\nmaxbet : Maximum amount to bet\nnextbet : Amount in next game\nlastBet.amount, previousbet : Amount in previous game\nlastBet.chance : % win chance in previous game\nlastBet.roll : % roll chance in previous game\nlastBet.target : Target number in previous game (some sites have)\nlastBet.result : Result number in previous game (some sites have)\nlastBet.profit, currentprofit : Profit in previous game\nlastBet.nonce : Current seed nonce\nlastBet.id : Bet ID in previous game\ncurrency : Currency to play (some site not work)\nbalance : Current balance\nminbalance : Smallest balance in session\nmaxbalance : Biggest balance in session\nminprofit : Smallest profit in session\nmaxprofit : Biggest profit in session\nprofit : Session profit\nwagered : Session wagered\nwin : State in previous game (true is win, false is lose)\nbets : Bet count\nwins : Win count\nwinstreak  : Winning streak\nlosses : Lose count\nlosestreak : Losing streak\ncurrentstreak : Current streak (smaller 0 is losing streak and vice versa)\npartialprofit : Partial profit (same in other dicebot)\nscriptname : Name of script u use\ncasino : Name of casino (example: 500.casino = 500; bch.games = bch)</pre>\n          </div>\n\n          <div id=\"wdbWrapFunctions\">\n<pre>dobet() : Main function for betting\nstop() : Stop betting\nresume() : Resume betting with current params\nresetseed() : Reset fairness\nresetstats() : Reset statistics\nresetchart() : Reset chart\nresethistory() : Reset history\nresetlog() : Reset log\nresetall() : Reset time, statistics, chart, history, log\ncheckbalance() : Check actual balance\nching() : Alert with sound\nlog(message) : Write a message in Log area\nsleep(sec) : Pause betting system with sec\nresetpartialprofit() : Reset partialprofit</pre>\n          </div>\n\n          <div id=\"wdbWrapTips\">\n            <pre>Click ▼ or ▲ on to see something change\nDisable chart, history, log to have best performance\nHold top or bottom area to move the bot around\nPlease check minimum bet size at dice site\nExtensions: github.com/webdicebot-project/extensions</pre>\n          </div>\n        </div>\n\n        <div id=\"wdbControlMenu\">\n          <button id=\"wdbStartButton\" class=\"btn-grad btn-control\" onclick=\"start('click')\">Start</button>\n          <button id=\"wdbStopButton\" class=\"btn-grad btn-control\" onclick=\"stop()\">Stop</button>\n          <button id=\"wdbResumeButton\" class=\"btn-grad btn-control\" onclick=\"resume('click')\" disabled>Resume</button>\n          <button id=\"wdbStopOnWinButton\" class=\"btn-grad btn-control\" onclick=\"stopOnWin()\">Stop On Win</button>\n          <button class=\"btn-grad btn-control\" onclick=\"checkbalance()\">Check Balance</button>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div id=\"wdbFooter\">\n    <div class=\"clearfix\">\n      <div class=\"float-left\" style=\"padding-left: 5px;\"> \n        bot.mhqb365.com | " + location.hostname.replace("www.", "") + "\n      </div>\n      <div class=\"float-right\">\n        Speed: <span id=\"wdbSpeed\">0</span>\n        <span class=\"wdb-toggle\" id=\"wdbToggleHideControlBot\" onclick=\"toggleHideControlBot(this)\">▲</span>\n      </div>\n    </div>\n  </div>\n</div>";
+function drawChart() {
+  dps = [{
+    x: 0,
+    y: 0
+  }];
+  chart = new CanvasJS.Chart("wdbChart", {
+    theme: darkMode ? "dark1" : "light1",
+    axisY: {
+      includeZero: false
+    },
+    data: [{
+      type: "line",
+      markerSize: 0,
+      dataPoints: dps
+    }]
+  });
+  chart.render();
+}
+async function updateChart(_0x31c118, _0x166567, _0x1ab2fa) {
+  if (!stopChart) {
+    dps.push({
+      x: _0x31c118,
+      y: _0x166567,
+      c: _0x1ab2fa
+    });
+    if (dps.length > maxRows) {
+      dps.shift();
+    }
+    if (dps[dps.length - 2]) {
+      dps[dps.length - 2].lineColor = _0x1ab2fa;
+    }
+    chart.render();
+  }
+  return "updateChart ok";
+}
+function changeMaxRows() {
+  maxRows = Number(document.getElementById("wdbMaxRows").value);
+  resetchart();
+  resethistory();
+  resetlog();
+}
+function toggleDarkMode() {
+  darkMode = !darkMode;
+  if (darkMode) {
+    document.getElementById("wdb").style.backgroundColor = "#2a2a2a";
+    document.getElementById("wdb").style.color = "#fff";
+    chart.options.theme = "dark1";
+    chart.render();
+    luaEditor.setOption("theme", "darcula");
+    jsEditor.setOption("theme", "darcula");
+    document.querySelector("#wdbWrapVariables pre").style.backgroundColor = "#2a2a2a";
+    document.querySelector("#wdbWrapVariables pre").style.color = "#fff";
+    document.querySelector("#wdbWrapFunctions pre").style.backgroundColor = "#2a2a2a";
+    document.querySelector("#wdbWrapFunctions pre").style.color = "#fff";
+    document.querySelector("#wdbWrapTips pre").style.backgroundColor = "#2a2a2a";
+    document.querySelector("#wdbWrapTips pre").style.color = "#fff";
+    document.querySelectorAll("#wdbWrapHistory table thead tr th").forEach(_0x5ab844 => _0x5ab844.style.color = "#fff");
+  } else {
+    document.getElementById("wdb").style.backgroundColor = "#fff";
+    document.getElementById("wdb").style.color = "#000";
+    chart.options.theme = "light";
+    chart.render();
+    luaEditor.setOption("theme", "default");
+    jsEditor.setOption("theme", "default");
+    document.querySelector("#wdbWrapVariables pre").style.backgroundColor = "#fff";
+    document.querySelector("#wdbWrapVariables pre").style.color = "#000";
+    document.querySelector("#wdbWrapFunctions pre").style.backgroundColor = "#fff";
+    document.querySelector("#wdbWrapFunctions pre").style.color = "#000";
+    document.querySelector("#wdbWrapTips pre").style.backgroundColor = "#fff";
+    document.querySelector("#wdbWrapTips pre").style.color = "#000";
+    document.querySelectorAll("#wdbWrapHistory table thead tr th").forEach(_0x514b65 => _0x514b65.style.color = "#000");
+  }
+  updateStats();
+}
+function toggleMinimalBot(_0x2b1309) {
+  if (_0x2b1309.innerText === "▼") {
+    document.getElementById("wdbMain").style.display = "none";
+    document.getElementById("wdbFooter").style.display = "none";
+    document.getElementById("wdb").style.width = "350px";
+    document.getElementById("wdb").style.top = "95vh";
+    document.getElementById("wdb").style.left = "0vh";
+    document.getElementById("wdb").style.position = "fixed";
+    _0x2b1309.innerText = "▲";
+  } else {
+    document.getElementById("wdbMain").style.display = "block";
+    document.getElementById("wdbFooter").style.display = "block";
+    document.getElementById("wdb").style.width = "1000px";
+    document.getElementById("wdb").style.top = "5px";
+    document.getElementById("wdb").style.left = "5px";
+    _0x2b1309.innerText = "▼";
+  }
+}
+function toggleHideControlBot(_0x1962a6) {
+  if (_0x1962a6.innerText === "▲") {
+    document.getElementById("wdbWrapControl").style.display = "none";
+    _0x1962a6.innerText = "▼";
+  } else {
+    document.getElementById("wdbWrapControl").style.display = "flex";
+    _0x1962a6.innerText = "▲";
+  }
+}
+function drawSelectCoin() {
+  let _0x104710 = "";
+  coins.map(_0x42eb88 => {
+    _0x104710 += "<option value=\"" + _0x42eb88 + "\">" + _0x42eb88 + "</option>";
+  });
+  document.getElementById("wdbMenuCoin").innerHTML = _0x104710;
+  currency = String(coin).toLowerCase();
+  fengari.load("currency=\"" + currency + "\"")();
+}
+async function wdbCreateUI() {
+  const _0x22a78f = document.createElement("div");
+  _0x22a78f.id = "wdbWrap";
+  _0x22a78f.innerHTML = wdbUI;
+  document.body.prepend(_0x22a78f);
+  const _0x5ebd76 = document.getElementById("wdb");
+  let _0x41ce94 = 0;
+  let _0x42afd3 = 0;
+  let _0x562267 = 0;
+  let _0x59066f = 0;
+  if (document.getElementById("wdbHeader")) {
+    document.getElementById("wdbHeader").onmousedown = _0x1d6e73;
+  } else {
+    _0x5ebd76.onmousedown = _0x1d6e73;
+  }
+  if (document.getElementById("wdbFooter")) {
+    document.getElementById("wdbFooter").onmousedown = _0x1d6e73;
+  } else {
+    _0x5ebd76.onmousedown = _0x1d6e73;
+  }
+  function _0x1d6e73(_0x429f24) {
+    _0x429f24 = _0x429f24 || window.event;
+    _0x429f24.preventDefault();
+    _0x562267 = _0x429f24.clientX;
+    _0x59066f = _0x429f24.clientY;
+    document.onmouseup = _0x339886;
+    document.onmousemove = _0x28898e;
+  }
+  function _0x28898e(_0x243dbc) {
+    _0x243dbc = _0x243dbc || window.event;
+    _0x243dbc.preventDefault();
+    _0x41ce94 = _0x562267 - _0x243dbc.clientX;
+    _0x42afd3 = _0x59066f - _0x243dbc.clientY;
+    _0x562267 = _0x243dbc.clientX;
+    _0x59066f = _0x243dbc.clientY;
+    _0x5ebd76.style.top = _0x5ebd76.offsetTop - _0x42afd3 + "px";
+    _0x5ebd76.style.left = _0x5ebd76.offsetLeft - _0x41ce94 + "px";
+  }
+  function _0x339886() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+  if (document.getElementById("wdbWrapLicenseBox")) {
+    document.getElementById("wdbWrapLicenseBox").remove();
+  }
+  if (document.getElementById("wdbWrapInitializing")) {
+    document.getElementById("wdbWrapInitializing").remove();
+  }
+  luaEditor = CodeMirror.fromTextArea(document.getElementById("wdbScriptBoxLUA"), {
+    theme: "default",
+    mode: "lua",
+    lineNumbers: true
+  });
+  luaEditor.save();
+  jsEditor = CodeMirror.fromTextArea(document.getElementById("wdbScriptBoxJS"), {
+    theme: "default",
+    mode: "javascript",
+    lineNumbers: true
+  });
+  jsEditor.save();
+  wdbSpeed = new MySpeed();
+  wdbTimer = new easytimer.Timer();
+  wdbTimer.addEventListener("secondsUpdated", () => {
+    const _0xc344f3 = wdbTimer.getTimeValues().days + ":" + wdbTimer.getTimeValues().hours + ":" + wdbTimer.getTimeValues().minutes + ":" + wdbTimer.getTimeValues().seconds;
+    document.getElementById("wdbTime").innerText = _0xc344f3;
+  });
+  document.getElementById("wdbJSMode").style.display = "none";
+  document.getElementById("wdbAdvancedMode").style.display = "none";
+  document.getElementById("wdbWrapLog").style.display = "none";
+  document.getElementById("wdbWrapVariables").style.display = "none";
+  document.getElementById("wdbWrapFunctions").style.display = "none";
+  document.getElementById("wdbWrapTips").style.display = "none";
+  document.getElementById("wdbShowMode").disabled = true;
+  luaFileSelector = document.getElementById("wdbOpenLUAScript");
+  luaFileSelector.addEventListener("click", function () {
+    luaFileSelector.value = null;
+  });
+  luaFileSelector.addEventListener("change", async _0x53c797 => {
+    const _0x2f1edc = await new Response(_0x53c797.target.files[0]).text();
+    if (!_0x2f1edc) {
+      return;
+    }
+    luaEditor.setValue(_0x2f1edc);
+  });
+  jsFileSelector = document.getElementById("wdbOpenJSScript");
+  jsFileSelector.addEventListener("click", function () {
+    jsFileSelector.value = null;
+  });
+  jsFileSelector.addEventListener("change", async _0x4c1689 => {
+    const _0x1cd963 = await new Response(_0x4c1689.target.files[0]).text();
+    if (!_0x1cd963) {
+      return;
+    }
+    jsEditor.setValue(_0x1cd963);
+  });
+  drawChart();
+  return "createUIOk";
+}
+async function wdbLoader(_0x5f1b5c) {
+  await _0x5f1b5c.loadScript("https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js");
+  await _0x5f1b5c.loadCSS("https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css");
+  await _0x5f1b5c.loadCSS("https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/darcula.min.css");
+  await _0x5f1b5c.loadScript("https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js");
+  await _0x5f1b5c.loadScript("https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/lua/lua.min.js");
+  await _0x5f1b5c.loadScript("https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js");
+  await _0x5f1b5c.loadScript(WDB_LIB + "/fengari-web.min.js");
+  await _0x5f1b5c.loadScript(WDB_LIB + "/canvasjs.min.js");
+  await _0x5f1b5c.loadScript(WDB_LIB + "/easytimer.js");
+  await _0x5f1b5c.loadScript(WDB_LIB + "/ms.js");
+  await beforeWork(_0x5f1b5c);
+  await wdbCreateUI();
+  await getListCoin();
+  await initLua();
+  log("Connected");
+  return "wdbLoader ok";
+}
+function toggleNav(_0x1fdc41) {
+  if (_0x1fdc41 === "mode") {
+    document.getElementById("wdbWrapMode").style.display = "block";
+    document.getElementById("wdbWrapLog").style.display = "none";
+    document.getElementById("wdbWrapVariables").style.display = "none";
+    document.getElementById("wdbWrapFunctions").style.display = "none";
+    document.getElementById("wdbWrapTips").style.display = "none";
+    document.getElementById("wdbShowMode").disabled = true;
+    document.getElementById("wdbShowLog").disabled = false;
+    document.getElementById("wdbShowVariables").disabled = false;
+    document.getElementById("wdbShowFunctions").disabled = false;
+    document.getElementById("wdbShowTips").disabled = false;
+  } else if (_0x1fdc41 === "log") {
+    document.getElementById("wdbWrapMode").style.display = "none";
+    document.getElementById("wdbWrapLog").style.display = "block";
+    document.getElementById("wdbWrapVariables").style.display = "none";
+    document.getElementById("wdbWrapFunctions").style.display = "none";
+    document.getElementById("wdbWrapTips").style.display = "none";
+    document.getElementById("wdbShowMode").disabled = false;
+    document.getElementById("wdbShowLog").disabled = true;
+    document.getElementById("wdbShowVariables").disabled = false;
+    document.getElementById("wdbShowFunctions").disabled = false;
+    document.getElementById("wdbShowTips").disabled = false;
+  } else if (_0x1fdc41 === "variables") {
+    document.getElementById("wdbWrapMode").style.display = "none";
+    document.getElementById("wdbWrapLog").style.display = "none";
+    document.getElementById("wdbWrapVariables").style.display = "block";
+    document.getElementById("wdbWrapFunctions").style.display = "none";
+    document.getElementById("wdbWrapTips").style.display = "none";
+    document.getElementById("wdbShowMode").disabled = false;
+    document.getElementById("wdbShowLog").disabled = false;
+    document.getElementById("wdbShowVariables").disabled = true;
+    document.getElementById("wdbShowFunctions").disabled = false;
+    document.getElementById("wdbShowTips").disabled = false;
+  } else if (_0x1fdc41 === "functions") {
+    document.getElementById("wdbWrapMode").style.display = "none";
+    document.getElementById("wdbWrapLog").style.display = "none";
+    document.getElementById("wdbWrapVariables").style.display = "none";
+    document.getElementById("wdbWrapFunctions").style.display = "block";
+    document.getElementById("wdbWrapTips").style.display = "none";
+    document.getElementById("wdbShowMode").disabled = false;
+    document.getElementById("wdbShowLog").disabled = false;
+    document.getElementById("wdbShowVariables").disabled = false;
+    document.getElementById("wdbShowFunctions").disabled = true;
+    document.getElementById("wdbShowTips").disabled = false;
+  } else if (_0x1fdc41 === "tips") {
+    document.getElementById("wdbWrapMode").style.display = "none";
+    document.getElementById("wdbWrapLog").style.display = "none";
+    document.getElementById("wdbWrapVariables").style.display = "none";
+    document.getElementById("wdbWrapFunctions").style.display = "none";
+    document.getElementById("wdbWrapTips").style.display = "block";
+    document.getElementById("wdbShowMode").disabled = false;
+    document.getElementById("wdbShowLog").disabled = false;
+    document.getElementById("wdbShowVariables").disabled = false;
+    document.getElementById("wdbShowFunctions").disabled = false;
+    document.getElementById("wdbShowTips").disabled = true;
+  }
+}
+function toggleShow(_0x1bb472) {
+  if (_0x1bb472 === "stats") {
+    if (document.getElementById("wdbToggleShowStats").checked) {
+      selectFunction("showstats");
+    } else {
+      selectFunction("hidestats");
+    }
+  } else if (_0x1bb472 === "chart") {
+    if (document.getElementById("wdbToggleShowChart").checked) {
+      selectFunction("showchart");
+    } else {
+      selectFunction("hidechart");
+    }
+  } else if (_0x1bb472 === "history") {
+    if (document.getElementById("wdbToggleShowHistory").checked) {
+      selectFunction("showhistory");
+    } else {
+      selectFunction("hidehistory");
+    }
+  }
+}
+function toggleLive(_0x3a2e36) {
+  if (_0x3a2e36 === "chart") {
+    if (document.getElementById("wdbToggleLiveChart").checked) {
+      selectFunction("startchart");
+    } else {
+      selectFunction("stopchart");
+    }
+  } else if (_0x3a2e36 === "history") {
+    if (document.getElementById("wdbToggleLiveHistory").checked) {
+      selectFunction("starthistory");
+    } else {
+      selectFunction("stophistory");
+    }
+  } else if (_0x3a2e36 === "log") {
+    if (document.getElementById("wdbToggleLiveLog").checked) {
+      selectFunction("startlog");
+    } else {
+      selectFunction("stoplog");
+    }
+  }
+}
+function selectFunction(_0xb2bcae) {
+  if (_0xb2bcae === "resetall") {
+    resetall();
+  }
+  if (_0xb2bcae === "resetstats") {
+    resetstats();
+  }
+  if (_0xb2bcae === "resetchart") {
+    toggleChart("reset");
+  }
+  if (_0xb2bcae === "resethistory") {
+    toggleHistory("clear");
+  }
+  if (_0xb2bcae === "resetlog") {
+    toggleLog("clear");
+  }
+  if (_0xb2bcae === "resetseed") {
+    resetseed();
+  }
+  if (_0xb2bcae === "stopchart") {
+    toggleChart("stop");
+  }
+  if (_0xb2bcae === "startchart") {
+    toggleChart("start");
+  }
+  if (_0xb2bcae === "stophistory") {
+    toggleHistory("stop");
+  }
+  if (_0xb2bcae === "starthistory") {
+    toggleHistory("start");
+  }
+  if (_0xb2bcae === "stoplog") {
+    toggleLog("stop");
+  }
+  if (_0xb2bcae === "startlog") {
+    toggleLog("start");
+  }
+  if (_0xb2bcae === "hidestats") {
+    toggleStats("hide");
+  }
+  if (_0xb2bcae === "showstats") {
+    toggleStats("show");
+  }
+  if (_0xb2bcae === "hidechart") {
+    toggleChart("hide");
+  }
+  if (_0xb2bcae === "showchart") {
+    toggleChart("show");
+  }
+  if (_0xb2bcae === "hidehistory") {
+    toggleHistory("hide");
+  }
+  if (_0xb2bcae === "showhistory") {
+    toggleHistory("show");
+  }
+}
+function toggleMode(_0x5eeb29) {
+  mode = _0x5eeb29;
+  if (_0x5eeb29 === "lua") {
+    document.getElementById("wdbLUAMode").style.display = "block";
+    document.getElementById("wdbJSMode").style.display = "none";
+    document.getElementById("wdbAdvancedMode").style.display = "none";
+  } else if (_0x5eeb29 === "js") {
+    document.getElementById("wdbLUAMode").style.display = "none";
+    document.getElementById("wdbJSMode").style.display = "block";
+    document.getElementById("wdbAdvancedMode").style.display = "none";
+  } else if (_0x5eeb29 === "advanced") {
+    document.getElementById("wdbLUAMode").style.display = "none";
+    document.getElementById("wdbJSMode").style.display = "none";
+    document.getElementById("wdbAdvancedMode").style.display = "block";
+  }
+}
+function toggleStats(_0x19756f) {
+  if (_0x19756f === "hide") {
+    document.getElementById("wdbStats").style.display = "none";
+  } else if (_0x19756f === "show") {
+    document.getElementById("wdbStats").style.display = "flex";
+  }
+}
+function toggleChart(_0x3771fa) {
+  if (_0x3771fa === "hide") {
+    document.getElementById("wdbChart").style.display = "none";
+    document.getElementById("wdbWrapHistory").style.height = "380px";
+  } else if (_0x3771fa === "show") {
+    document.getElementById("wdbChart").style.display = "block";
+    document.getElementById("wdbWrapHistory").style.height = "190px";
+  } else if (_0x3771fa === "stop") {
+    stopChart = true;
+  } else if (_0x3771fa === "start") {
+    stopChart = false;
+  } else if (_0x3771fa === "reset") {
+    betsChart = 0;
+    profitChart = 0;
+    drawChart();
+  }
+}
+function toggleHistory(_0x672789) {
+  if (_0x672789 === "hide") {
+    document.getElementById("wdbWrapHistory").style.display = "none";
+    document.getElementById("wdbChart").style.height = "380px";
+  } else if (_0x672789 === "show") {
+    document.getElementById("wdbWrapHistory").style.display = "block";
+    document.getElementById("wdbChart").style.height = "190px";
+  } else if (_0x672789 === "stop") {
+    stopHistory = true;
+  } else if (_0x672789 === "start") {
+    stopHistory = false;
+  } else if (_0x672789 === "clear") {
+    document.getElementById("wdbHistory").innerHTML = "";
+  }
+}
+function toggleLog(_0x3e3e88) {
+  if (_0x3e3e88 === "stop") {
+    stopLog = true;
+  } else if (_0x3e3e88 === "start") {
+    stopLog = false;
+  } else if (_0x3e3e88 === "clear") {
+    document.getElementById("wdbLog").innerHTML = "";
+  }
+}
+async function handleAdvanced() {
+  chance = Number(document.getElementById("advancedChance").value);
+  chanceOnWinCheck = document.getElementById("advancedChanceOnWinCheck").checked;
+  if (chanceOnWinCheck) {
+    chanceOnWin = Number(document.getElementById("advancedChanceOnWin").value);
+  } else {
+    chanceOnWin = chance;
+  }
+  chanceOnWinBets = Number(document.getElementById("advancedChanceOnWinBets").value);
+  chanceOnLoseCheck = document.getElementById("advancedChanceOnLoseCheck").checked;
+  if (chanceOnLoseCheck) {
+    chanceOnLose = Number(document.getElementById("advancedChanceOnLose").value);
+  } else {
+    chanceOnLose = chance;
+  }
+  chanceOnLoseBets = Number(document.getElementById("advancedChanceOnLoseBets").value);
+  multiOnWinCheck = document.getElementById("advancedMultiOnWinCheck").checked;
+  if (multiOnWinCheck) {
+    multiOnWin = Number(document.getElementById("advancedMultiOnWin").value);
+  } else {
+    multiOnWin = 1;
+  }
+  multiOnWinBets = Number(document.getElementById("advancedMultiOnWinBets").value);
+  multiOnLoseCheck = document.getElementById("advancedMultiOnLoseCheck").checked;
+  if (multiOnLoseCheck) {
+    multiOnLose = Number(document.getElementById("advancedMultiOnLose").value);
+  } else {
+    multiOnLose = 1;
+  }
+  multiOnLoseBets = Number(document.getElementById("advancedMultiOnLoseBets").value);
+  betHighOnBetCheck = document.getElementById("advancedBetHighOnBetCheck").checked;
+  if (betHighOnBetCheck) {
+    betHighOnBet = Number(document.getElementById("advancedBetHighOnBet").value);
+    if (bets % betHighOnBet === 0) {
+      bethigh = !bethigh;
+    }
+  }
+  betHighOnProfitCheck = document.getElementById("advancedBetHighOnProfitCheck").checked;
+  if (betHighOnProfitCheck) {
+    betHighOnProfit = Number(document.getElementById("advancedBetHighOnProfit").value);
+    if (profit >= betHighOnProfit) {
+      bethigh = !bethigh;
+    }
+  }
+  resetstatsOnProfitCheck = document.getElementById("resetstatsOnProfitCheck").checked;
+  if (resetstatsOnProfitCheck) {
+    resetstatsOnProfit = Number(document.getElementById("resetstatsOnProfit").value);
+    if (profit >= resetstatsOnProfit) {
+      resetstats();
+    }
+  }
+  stopRollNumberCheck = document.getElementById("advancedStopRollNumberCheck").checked;
+  if (stopRollNumberCheck) {
+    stopRollNumber = Number(document.getElementById("advancedStopRollNumber").value);
+    if (lastBet.result === stopRollNumber) {
+      stop();
+      log("Stop on roll number " + stopRollNumber);
+    }
+  }
+  stopStreakCheck = document.getElementById("advancedStopAfterStreakCheck").checked;
+  if (stopStreakCheck) {
+    stopStreak = Number(document.getElementById("advancedStopAfterStreak").value);
+    if (stopStreak > 0) {
+      if (currentstreak >= stopStreak) {
+        stop();
+        log("Stop on current streak " + stopStreak);
+      }
+    } else if (currentstreak <= stopStreak) {
+      stop();
+      log("Stop on current streak " + stopStreak);
+    }
+  }
+  stopOnBetsCheck = document.getElementById("advancedStopOnBetsCheck").checked;
+  if (stopOnBetsCheck) {
+    stopOnBets = Number(document.getElementById("advancedStopOnBets").value);
+    if (bets >= stopOnBets) {
+      stop();
+      log("Stop on " + stopOnBets + " bet");
+    }
+  }
+  stopOnWinsCheck = document.getElementById("advancedStopOnWinsCheck").checked;
+  if (stopOnWinsCheck) {
+    stopOnWins = Number(document.getElementById("advancedStopOnWins").value);
+    if (winstreak >= stopOnWins) {
+      stop();
+      log("Stop on " + stopOnWins + " win");
+    }
+  }
+  stopOnLoseCheck = document.getElementById("advancedStopOnLoseCheck").checked;
+  if (stopOnLoseCheck) {
+    stopOnLose = Number(document.getElementById("advancedStopOnLose").value);
+    if (losestreak >= stopOnLose) {
+      stop();
+      log("Stop on " + stopOnLose + " lose");
+    }
+  }
+  stopOnProfitCheck = document.getElementById("stopOnProfitCheck").checked;
+  if (stopOnProfitCheck) {
+    stopOnProfit = Number(document.getElementById("stopOnProfit").value);
+    if (profit >= stopOnProfit) {
+      stop();
+      log("Stop on profit " + stopOnProfit);
+    }
+  }
+  stopOnBalanceCheck = document.getElementById("stopOnBalanceCheck").checked;
+  if (stopOnBalanceCheck) {
+    stopOnBalance = Number(document.getElementById("stopOnBalance").value);
+    if (balance >= stopOnBalance) {
+      stop();
+      log("Stop on balance " + stopOnBalance);
+    }
+  }
+  if (win) {
+    betHighOnWinCheck = document.getElementById("advancedBetHighOnWinCheck").checked;
+    if (betHighOnWinCheck) {
+      betHighOnWin = Number(document.getElementById("advancedBetHighOnWin").value);
+      if (winstreak % betHighOnWin === 0) {
+        bethigh = !bethigh;
+      }
+    }
+    if (winstreak % chanceOnWinBets === 0) {
+      chance = chanceOnWin;
+    }
+    if (multiOnWinCheck) {
+      if (winstreak % multiOnWinBets === 0) {
+        nextbet = previousbet * multiOnWin;
+      }
+    } else {
+      nextbet = basebet;
+    }
+  } else {
+    betHighOnLoseCheck = document.getElementById("advancedBetHighOnLoseCheck").checked;
+    if (betHighOnLoseCheck) {
+      betHighOnLose = Number(document.getElementById("advancedBetHighOnLose").value);
+      if (losestreak % betHighOnLose === 0) {
+        bethigh = !bethigh;
+      }
+    }
+    if (losestreak % chanceOnLoseBets === 0) {
+      chance = chanceOnLose;
+    }
+    if (multiOnLoseCheck) {
+      if (losestreak % multiOnLoseBets === 0) {
+        nextbet = previousbet * multiOnLose;
+      }
+    } else {
+      nextbet = basebet;
+    }
+  }
+  return "handleAdvanced ok";
+}
+function changeCoin() {
+  coin = document.getElementById("wdbMenuCoin").value;
+  currency = String(coin).toLowerCase();
+  fengari.load("currency=\"" + currency + "\"")();
+  checkbalance();
+}
+async function handleStats() {
+  bets++;
+  betsChart++;
+  wdbSpeed.bets++;
+  lastBet.target = target;
+  lastBet.Target = target;
+  lastBet.result = result;
+  lastBet.Result = result;
+  lastBet.profit = currentprofit;
+  lastBet.Profit = currentprofit;
+  lastBet.Nonce = lastBet.nonce;
+  lastBet.Id = lastBet.id;
+  balance += currentprofit;
+  profit += currentprofit;
+  profitChart += currentprofit;
+  wagered += nextbet;
+  partialprofit += currentprofit;
+  if (game === "dice") {
+    if (lastBet.bethigh) {
+      if (lastBet.result > lastBet.target) {
+        win = true;
+      } else {
+        win = false;
+      }
+    } else if (lastBet.result < lastBet.target) {
+      win = true;
+    } else {
+      win = false;
+    }
+  } else if (game === "plinko") {
+    if (lastBet.profit > 0) {
+      win = true;
+    } else {
+      win = false;
+    }
+  } else if (lastBet.result >= lastBet.target) {
+    win = true;
+  } else {
+    win = false;
+  }
+  if (win) {
+    color = "green";
+    wins++;
+    winstreak++;
+    losestreak = 0;
+    currentstreak = winstreak;
+  } else {
+    color = "red";
+    losses++;
+    losestreak++;
+    winstreak = 0;
+    currentstreak = 0 - losestreak;
+    if (previousbet > maxLosseAmount) {
+      maxLosseAmount = previousbet;
+    }
+  }
+  if (nextbet > maxBetAmount) {
+    maxBetAmount = nextbet;
+  }
+  if (winstreak > maxwinstreak) {
+    maxwinstreak = winstreak;
+  }
+  if (losestreak > maxlosestreak) {
+    maxlosestreak = losestreak;
+  }
+  if (balance < minbalance) {
+    minbalance = balance;
+  }
+  if (balance > maxbalance) {
+    maxbalance = balance;
+  }
+  if (profit < minprofit) {
+    minprofit = profit;
+  }
+  if (profit > maxprofit) {
+    maxprofit = profit;
+  }
+  await showInfo().then(async _0x27f6b9 => {
+    try {
+      if (mode === "lua") {
+        await updateLua().then(_0x4bc79c => {
+          if (win && sOW) {
+            stop();
+          }
+          if (run) {
+            playBet();
+          }
+        });
+      } else if (mode === "js") {
+        await dobet();
+        if (win && sOW) {
+          stop();
+        }
+        if (run) {
+          playBet();
+        }
+      } else if (mode === "advanced") {
+        await handleAdvanced().then(_0x5e8648 => {
+          if (win && sOW) {
+            stop();
+          }
+          if (run) {
+            playBet();
+          }
+        });
+      }
+    } catch (_0x109385) {
+      stop();
+      log(_0x109385);
+    }
+  });
+}
+async function showInfo() {
+  const _0x2480c2 = profit === 0 ? darkMode ? "white" : "black" : profit < 0 ? "red" : "green";
+  const _0x80e077 = currentstreak === 0 ? darkMode ? "white" : "black" : currentstreak < 0 ? "red" : "green";
+  const _0x21faf5 = maxwinstreak > 0 ? "green" : "black";
+  document.getElementById("wdbHighWinStreak").style.color = _0x21faf5;
+  const _0x1e1d54 = maxlosestreak > 0 ? "red" : "black";
+  document.getElementById("wdbHighLoseStreak").style.color = _0x1e1d54;
+  document.getElementById("wdbWagered").innerText = wagered.toFixed(decimalAmountView);
+  document.getElementById("wdbBalance").innerText = balance.toFixed(decimalAmountView);
+  document.getElementById("wdbProfit").style.color = _0x2480c2;
+  document.getElementById("wdbProfit").innerText = profit.toFixed(decimalAmountView);
+  document.getElementById("wdbHighBet").innerText = maxBetAmount.toFixed(decimalAmountView);
+  document.getElementById("wdbHighLose").innerText = maxLosseAmount.toFixed(decimalAmountView);
+  document.getElementById("wdbBets").innerText = bets;
+  document.getElementById("wdbWins").innerText = wins;
+  document.getElementById("wdbLosses").innerText = losses;
+  document.getElementById("wdbCurrentStreak").style.color = _0x80e077;
+  document.getElementById("wdbCurrentStreak").innerText = currentstreak;
+  document.getElementById("wdbHighWinStreak").innerText = maxwinstreak;
+  document.getElementById("wdbHighLoseStreak").innerText = maxlosestreak;
+  document.getElementById("wdbMinBalance").innerText = minbalance.toFixed(decimalAmountView);
+  document.getElementById("wdbMaxBalance").innerText = maxbalance.toFixed(decimalAmountView);
+  document.getElementById("wdbMinProfit").innerText = minprofit.toFixed(decimalAmountView);
+  document.getElementById("wdbMaxProfit").innerText = maxprofit.toFixed(decimalAmountView);
+  percentWagered = wagered / startBalance;
+  percentWagered = Math.round((percentWagered + Number.EPSILON) * 100) / 100;
+  if (String(percentWagered) === "Infinity" || String(percentWagered) === "NaN") {
+    percentWagered = 0;
+  }
+  document.getElementById("wdbPercentWagered").innerText = percentWagered;
+  percentProfit = profit / startBalance * 100;
+  percentProfit = Math.round((percentProfit + Number.EPSILON) * 100) / 100;
+  if (String(percentProfit) === "Infinity" || String(percentProfit) === "NaN") {
+    percentProfit = 0;
+  }
+  document.getElementById("wdbWrapPercentProfit").style.color = _0x2480c2;
+  document.getElementById("wdbPercentProfit").innerText = percentProfit;
+  if (!stopHistory) {
+    const _0x39bab5 = game === "dice" ? lastBet.bethigh ? ">" : "<" : ">";
+    const _0x34e589 = lastBet.bethigh ? "<input id=\"bethigh" + bets + "\" type=\"checkbox\" checked />" : "<input id=\"bethigh" + bets + "\" type=\"checkbox\" />";
+    const _0x9587e3 = "" + (havePlinkoRows ? plinkoRow + " | " : "") + plinkoRisk;
+    const _0x2f1c28 = "<td>" + bets + "</td>\n      <td>" + Number(lastBet.amount).toFixed(decimalAmountView) + "</td>\n      <td>" + _0x34e589 + "</td>\n      <td>" + (game === "plinko" ? _0x9587e3 : Number(lastBet.chance).toFixed(decimalChanceView)) + "</td>\n      <td>" + Number(lastBet.roll).toFixed(decimalChanceView) + "</td>\n      <td>" + Number(lastBet.profit).toFixed(decimalAmountView) + "</td>\n      <td>" + (game === "plinko" ? _0x9587e3 : _0x39bab5 + Number(lastBet.target).toFixed(decimalTargetResult)) + "</td>\n      <td>" + Number(result).toFixed(decimalTargetResult) + "</td>\n      <td>" + lastBet.nonce + "</td>\n      <td>" + lastBet.id + "</td>";
+    const _0x35957 = document.createElement("tr");
+    if (win) {
+      _0x35957.style.backgroundColor = "#91f190";
+    } else {
+      _0x35957.style.backgroundColor = "#ffc0cb";
+    }
+    _0x35957.innerHTML = _0x2f1c28;
+    document.getElementById("wdbHistory").insertBefore(_0x35957, document.getElementById("wdbHistory").children[0]);
+    const _0x2497e7 = document.querySelector("#wdbHistory").rows;
+    if (_0x2497e7.length > maxRows) {
+      document.querySelector("#wdbHistory").lastChild.remove();
+    }
+  }
+  if (!stopChart) {
+    dps.push({
+      x: betsChart,
+      y: profitChart,
+      c: color
+    });
+    if (dps.length > maxRows) {
+      dps.shift();
+    }
+    if (dps[dps.length - 2]) {
+      dps[dps.length - 2].lineColor = color;
+    }
+    chart.render();
+  }
+  return "showInfo OK";
+}
+async function updateStats() {
+  const _0x2f675e = profit === 0 ? darkMode ? "white" : "black" : profit < 0 ? "red" : "green";
+  const _0x392745 = currentstreak === 0 ? darkMode ? "white" : "black" : currentstreak < 0 ? "red" : "green";
+  const _0x1e2a0e = maxwinstreak > 0 ? "green" : "black";
+  document.getElementById("wdbHighWinStreak").style.color = _0x1e2a0e;
+  const _0x37aad7 = maxlosestreak > 0 ? "red" : "black";
+  document.getElementById("wdbHighLoseStreak").style.color = _0x37aad7;
+  document.getElementById("wdbWagered").innerText = wagered.toFixed(decimalAmountView);
+  document.getElementById("wdbBalance").innerText = balance.toFixed(decimalAmountView);
+  document.getElementById("wdbProfit").style.color = _0x2f675e;
+  document.getElementById("wdbProfit").innerText = profit.toFixed(decimalAmountView);
+  document.getElementById("wdbHighBet").innerText = maxBetAmount.toFixed(decimalAmountView);
+  document.getElementById("wdbHighLose").innerText = maxLosseAmount.toFixed(decimalAmountView);
+  document.getElementById("wdbBets").innerText = bets;
+  document.getElementById("wdbWins").innerText = wins;
+  document.getElementById("wdbLosses").innerText = losses;
+  document.getElementById("wdbCurrentStreak").style.color = _0x392745;
+  document.getElementById("wdbCurrentStreak").innerText = currentstreak;
+  document.getElementById("wdbHighWinStreak").innerText = maxwinstreak;
+  document.getElementById("wdbHighLoseStreak").innerText = maxlosestreak;
+  document.getElementById("wdbMinBalance").innerText = minbalance.toFixed(decimalAmountView);
+  document.getElementById("wdbMaxBalance").innerText = maxbalance.toFixed(decimalAmountView);
+  document.getElementById("wdbMinProfit").innerText = minprofit.toFixed(decimalAmountView);
+  document.getElementById("wdbMaxProfit").innerText = maxprofit.toFixed(decimalAmountView);
+  percentWagered = wagered / startBalance;
+  percentWagered = Math.round((percentWagered + Number.EPSILON) * 100) / 100;
+  if (String(percentWagered) === "Infinity" || String(percentWagered) === "NaN") {
+    percentWagered = 0;
+  }
+  document.getElementById("wdbPercentWagered").innerText = percentWagered;
+  percentProfit = profit / startBalance * 100;
+  percentProfit = Math.round((percentProfit + Number.EPSILON) * 100) / 100;
+  if (String(percentProfit) === "Infinity" || String(percentProfit) === "NaN") {
+    percentProfit = 0;
+  }
+  document.getElementById("wdbWrapPercentProfit").style.color = _0x2f675e;
+  document.getElementById("wdbPercentProfit").innerText = percentProfit;
+  return "updateStats ok";
+}
+async function updateHistory(_0x15dd8a, _0x396e78) {
+  if (!stopHistory) {
+    const _0x345721 = game === "dice" ? _0x396e78.bethigh ? ">" : "<" : ">";
+    const _0x4df385 = _0x396e78.bethigh ? "<input id=\"bethigh" + _0x15dd8a + "\" type=\"checkbox\" checked />" : "<input id=\"bethigh" + _0x15dd8a + "\" type=\"checkbox\" />";
+    const _0x15f373 = "" + (havePlinkoRows ? plinkoRow + " | " : "") + plinkoRisk;
+    const _0x5684c9 = "<td>" + _0x15dd8a + "</td>\n      <td>" + Number(_0x396e78.amount).toFixed(decimalAmountView) + "</td>\n      <td>" + _0x4df385 + "</td>\n      <td>" + (game === "plinko" ? _0x15f373 : Number(_0x396e78.chance).toFixed(decimalChanceView)) + "</td>\n      <td>" + Number(_0x396e78.roll).toFixed(decimalChanceView) + "</td>\n      <td>" + Number(_0x396e78.profit).toFixed(decimalAmountView) + "</td>\n      <td>" + (game === "plinko" ? _0x15f373 : _0x345721 + Number(_0x396e78.target).toFixed(decimalTargetResult)) + "</td>\n      <td>" + Number(result).toFixed(decimalTargetResult) + "</td>\n      <td>" + _0x396e78.nonce + "</td>\n      <td>" + _0x396e78.id + "</td>";
+    const _0x211799 = document.createElement("tr");
+    if (win) {
+      _0x211799.style.backgroundColor = "#91f190";
+    } else {
+      _0x211799.style.backgroundColor = "#ffc0cb";
+    }
+    _0x211799.innerHTML = _0x5684c9;
+    document.getElementById("wdbHistory").insertBefore(_0x211799, document.getElementById("wdbHistory").children[0]);
+    const _0x4405d4 = document.querySelector("#wdbHistory").rows;
+    if (_0x4405d4.length > maxRows) {
+      document.querySelector("#wdbHistory").lastChild.remove();
+    }
+  }
+  return "updateHistory ok";
+}
+function log(_0x58c118) {
+  const _0x38287d = document.getElementById("wdbLog");
+  const _0x3b364b = document.createElement("li");
+  _0x3b364b.innerText = "" + _0x58c118;
+  document.getElementById("wdbLog").insertBefore(_0x3b364b, _0x38287d.children[0]);
+  const _0x3ca2ff = _0x38287d.getElementsByTagName("li");
+  if (_0x3ca2ff.length > maxRows) {
+    document.getElementById("wdbLog").removeChild(_0x38287d.lastChild);
+  }
+}
+async function start() {
+  try {
+    if (!run) {
+      document.getElementById("wdbTime").innerText = "0:0:0:0";
+      document.getElementById("wdbMenuCoin").disabled = true;
+      document.getElementById("wdbMenuMode").disabled = true;
+      document.getElementById("wdbStartButton").disabled = true;
+      document.getElementById("wdbResumeButton").disabled = true;
+      document.getElementById("wdbOpenLUAScript").disabled = true;
+      document.getElementById("wdbOpenJSScript").disabled = true;
+      document.querySelectorAll("#wdbSaveScriptButton").forEach(_0x170dd6 => _0x170dd6.disabled = true);
+      document.querySelectorAll("#wdbOpenScript").forEach(_0x140dbc => _0x140dbc.disabled = true);
+      run = true;
+      sOW = false;
+      wdbTimer.stop();
+      wdbTimer.start();
+      wdbSpeed.stop();
+      wdbSpeed.start();
+      fengari.load("scriptname = \"\"")();
+      if (mode === "lua") {
+        diceScript = luaEditor.getValue();
+        diceScript = diceScript.replace(/!=/g, "~=").replace(/!/g, "not ").replace(/([a-zA-Z]*[0-9]*\s*)\+\=(\s*[a-zA-Z]*[0-9]*)/g, "$1=$1+$2 ").replace(/([a-zA-Z]*[0-9]*\s*)\-\=(\s*[a-zA-Z]*[0-9]*)/g, "$1=$1-$2 ").replace(/([a-zA-Z]*[0-9]*\s*)\*\=(\s*[a-zA-Z]*[0-9]*)/g, "$1=$1*$2 ").replace(/([a-zA-Z]*[0-9]*\s*)\/\=(\s*[a-zA-Z]*[0-9]*)/g, "$1=$1/$2 ");
+        fengari.load(diceScript)();
+        scriptname = fengari.load("return scriptname")();
+        if (scriptname !== undefined && scriptname !== "") {
+          document.getElementById("scriptName").innerText = "Script Name: " + scriptname;
+        } else {
+          scriptname = "";
+          document.getElementById("scriptName").innerText = "";
+        }
+      } else if (mode === "js") {
+        if (document.getElementById("wdbRunningScript") !== null) {
+          document.getElementById("wdbRunningScript").remove();
+        }
+        diceScript = jsEditor.getValue();
+        let _0x516926 = document.createElement("script");
+        _0x516926.id = "wdbRunningScript";
+        _0x516926.innerHTML = diceScript;
+        document.head.appendChild(_0x516926);
+      } else if (mode === "advanced") {
+        basebet = Number(document.getElementById("advancedBaseBet").value);
+        nextbet = basebet;
+        chance = Number(document.getElementById("advancedChance").value);
+        bethigh = document.querySelector("#advancedBetHigh").checked;
+      }
+      if (run) {
+        return playBet();
+      }
+    }
+  } catch (_0x2c5eff) {
+    stop();
+    log(_0x2c5eff);
+  }
+}
+function stop() {
+  if (run) {
+    run = false;
+    sOW = false;
+    wdbSpeed.pause();
+    wdbTimer.pause();
+    document.getElementById("wdbMenuCoin").disabled = false;
+    document.getElementById("wdbMenuMode").disabled = false;
+    document.getElementById("wdbStartButton").disabled = false;
+    document.getElementById("wdbResumeButton").disabled = false;
+    document.getElementById("wdbOpenLUAScript").disabled = false;
+    document.getElementById("wdbOpenJSScript").disabled = false;
+    document.querySelectorAll("#wdbSaveScriptButton").forEach(_0x238812 => _0x238812.disabled = false);
+    document.querySelectorAll("#wdbOpenScript").forEach(_0x4a5ff2 => _0x4a5ff2.disabled = false);
+    document.getElementById("wdbStopOnWinButton").disabled = false;
+  }
+}
+async function resume(_0x262842) {
+  if (!run) {
+    document.getElementById("wdbMenuCoin").disabled = true;
+    document.getElementById("wdbMenuMode").disabled = true;
+    document.getElementById("wdbStartButton").disabled = true;
+    document.getElementById("wdbResumeButton").disabled = true;
+    document.getElementById("wdbOpenLUAScript").disabled = true;
+    document.getElementById("wdbOpenJSScript").disabled = true;
+    document.querySelectorAll("#wdbSaveScriptButton").forEach(_0x165b71 => _0x165b71.disabled = true);
+    document.querySelectorAll("#wdbOpenScript").forEach(_0x1bdf5f => _0x1bdf5f.disabled = true);
+    if (!_0x262842) {
+      log("Call resume() by script -> betting after 5s");
+      await new Promise(_0x98f920 => setTimeout(_0x98f920, 5000));
+    }
+    run = true;
+    sOW = false;
+    wdbSpeed.start();
+    wdbTimer.start();
+    return playBet();
+  }
+}
+function stopOnWin() {
+  sOW = true;
+  if (run) {
+    document.getElementById("wdbStopOnWinButton").disabled = true;
+  }
+}
+async function playBet() {
+  try {
+    if (mode === "lua") {
+      nextbet = fengari.load("return nextbet")();
+      chance = fengari.load("return chance")();
+      bethigh = fengari.load("return bethigh")();
+    }
+    nextbet = Number(nextbet);
+    chance = Number(chance);
+    previousbet = nextbet;
+    lastBet.amount = nextbet;
+    lastBet.Amount = nextbet;
+    lastBet.chance = chance;
+    lastBet.Chance = chance;
+    lastBet.bethigh = bethigh;
+    if (!stopLog) {
+      if (game === "plinko") {
+        const _0x17a9c3 = "" + (havePlinkoRows ? plinkoRow + " | " : "") + plinkoRisk;
+        const _0x5c3333 = "Betting " + Number(lastBet.amount).toFixed(decimalAmountView) + " at " + _0x17a9c3 + " to win";
+        log(_0x5c3333);
+      } else {
+        const _0x57c0a9 = game === "dice" ? bethigh ? "high" : "low" : "high";
+        const _0x1a574f = "Betting " + Number(lastBet.amount).toFixed(decimalAmountView) + " at " + Number(lastBet.chance).toFixed(decimalChanceView) + "% chance to win, " + _0x57c0a9;
+        log(_0x1a574f);
+      }
+    }
+    if (run) {
+      return sendBet();
+    }
+  } catch (_0x2724ce) {
+    stop();
+    log(_0x2724ce);
+  }
+}
+function resetall() {
+  document.getElementById("wdbTime").innerText = "0:0:0:0";
+  if (run) {
+    wdbSpeed.stop();
+    wdbSpeed.start();
+    wdbTimer.stop();
+    wdbTimer.start();
+  } else {
+    wdbSpeed.stop();
+    wdbTimer.stop();
+  }
+  resetstats();
+  toggleChart("reset");
+  toggleHistory("clear");
+  toggleLog("clear");
+}
+function resetchart() {
+  return toggleChart("reset");
+}
+function resethistory() {
+  return toggleHistory("clear");
+}
+function resetlog() {
+  return toggleLog("clear");
+}
+function resetstats() {
+  startBalance = balance;
+  wagered = 0;
+  percentWagered = 0;
+  profit = 0;
+  percentProfit = 0;
+  maxBetAmount = 0;
+  maxLosseAmount = 0;
+  maxwinstreak = 0;
+  maxlosestreak = 0;
+  minbalance = balance;
+  maxbalance = balance;
+  minprofit = 0;
+  maxprofit = 0;
+  bets = 0;
+  wins = 0;
+  losses = 0;
+  currentstreak = 0;
+  return updateStats();
+}
+function resetpartialprofit() {
+  partialprofit = 0;
+}
+function invest(_0x43bda9) {
+  return _0x43bda9;
+}
+function ching() {
+  return wdbSound.play();
+}
+function sleep(_0x2c7117) {
+  return new Promise(_0x4ef7ea => setTimeout(_0x4ef7ea, _0x2c7117 * 1000));
+}
+async function initLua() {
+  fengari.load("function start()\njs.global:start()\nend")();
+  fengari.load("function stop()\njs.global:stop()\nend")();
+  fengari.load("function resume()\njs.global:resume()\nend")();
+  fengari.load("function checkbalance()\n js.global:checkbalance()\n end")();
+  fengari.load("function resetstats()\njs.global:resetstats()\nend")();
+  fengari.load("function resetseed()\njs.global:resetseed()\nend")();
+  fengari.load("function resetchart()\njs.global:resetchart()\nend")();
+  fengari.load("function resethistory()\njs.global:resethistory()\nend")();
+  fengari.load("function resetlog()\njs.global:resetlog()\nend")();
+  fengari.load("function resetall()\njs.global:resetall()\nend")();
+  fengari.load("function ching()\njs.global:ching()\nend")();
+  fengari.load("function log(msg)\njs.global:log(msg)\nend")();
+  fengari.load("function invest(amount)\njs.global:invest(amount)\nend")();
+  fengari.load("function resetpartialprofit()\njs.global:resetpartialprofit()\nend")();
+  fengari.load("clock = os.clock\n  function sleep(n)\n    local t0 = clock()\n    while clock() - t0 <= n do end\n  end")();
+  fengari.load("table.getn = function (t)\n    local count = 0\n    for _, __ in pairs(t) do\n      count = count + 1\n    end\n    return count\n  end")();
+  const _0x49235e = location.hostname.replace("www.", "");
+  let _0xfb44ca = _0x49235e.indexOf(".");
+  casino = _0x49235e.slice(0, _0xfb44ca);
+  fengari.load("casino=\"" + casino + "\"")();
+  return "initLuaOk";
+}
+async function updateLua() {
+  fengari.load("\n    win=" + win + "\n    bets=" + bets + "\n    wins=" + wins + "\n    losses=" + losses + "\n    winstreak=" + winstreak + "\n    losestreak=" + losestreak + "\n    currentstreak=" + currentstreak + "\n    balance=" + balance + "\n    minbalance=" + minbalance + "\n    maxbalance=" + maxbalance + "\n    minprofit=" + minprofit + "\n    maxprofit=" + maxprofit + "\n    chance=" + chance + "\n    bethigh=" + bethigh + "\n    nextbet=" + nextbet + "\n    previousbet=" + previousbet + "\n    profit=" + profit + "\n    currentprofit=" + currentprofit + "\n    partialprofit=" + partialprofit + "\n    wagered=" + wagered + "\n  ")();
+  fengari.load("\n    lastBet={\n      amount=" + lastBet.amount + ",\n      Amount=" + lastBet.amount + ",\n      chance= " + lastBet.chance + ",\n      Chance= " + lastBet.chance + ",\n      roll=" + lastBet.roll + ",\n      Roll=" + lastBet.roll + ",\n      profit=" + lastBet.profit + ",\n      Profit=" + lastBet.profit + ",\n      target= " + lastBet.target + ",\n      Target= " + lastBet.target + ",\n      result=" + lastBet.result + ",\n      Result=" + lastBet.result + ",\n      nonce=" + lastBet.nonce + ",\n      Nonce=" + lastBet.nonce + ",\n      id=\"" + lastBet.id + "\",\n      Id=\"" + lastBet.id + "\"\n    }\n  ")();
+  fengari.load("dobet()")();
+  if (fengari.load("return currency")()) {
+    currency = fengari.load("return currency")();
+    coin = String(currency).toUpperCase();
+  }
+  if (fengari.load("return plinkoRisk")()) {
+    plinkoRisk = fengari.load("return plinkoRisk")();
+  }
+  if (fengari.load("return plinkoRow")()) {
+    plinkoRow = fengari.load("return plinkoRow")();
+  }
+  return "updateLua done";
+}
+function randomString(_0x47611d, _0x5c7ab6) {
+  const _0x54caa0 = "abcdefghijklmnopqrstuvwxyz";
+  const _0xe561b3 = _0x54caa0.toUpperCase();
+  const _0x4237fa = "0123456789";
+  const _0x440b19 = _0x54caa0.slice(0, 6);
+  let _0x16ac4f = "";
+  let _0x138964 = "";
+  if (!_0x5c7ab6) {
+    _0x16ac4f = _0x4237fa + _0x54caa0 + _0xe561b3;
+  }
+  if (_0x5c7ab6 === "alphabet") {
+    _0x16ac4f = _0x54caa0 + _0xe561b3;
+  }
+  if (_0x5c7ab6 === "numeric") {
+    _0x16ac4f = _0x4237fa;
+  }
+  if (_0x5c7ab6 === "hex") {
+    _0x16ac4f = _0x4237fa + _0x440b19;
+  }
+  for (let _0x3dc1cb = 0; _0x3dc1cb < _0x47611d; _0x3dc1cb++) {
+    _0x138964 += _0x16ac4f.charAt(Math.floor(Math.random() * _0x16ac4f.length));
+  }
+  return _0x138964;
+}
+function setCookie(_0x1698ef, _0x4a5d77, _0x23e4ce) {
+  const _0x47b09d = new Date();
+  _0x47b09d.setTime(_0x47b09d.getTime() + _0x23e4ce * 24 * 60 * 60 * 1000);
+  let _0x22421d = "expires=" + _0x47b09d.toUTCString();
+  document.cookie = _0x1698ef + "=" + _0x4a5d77 + ";" + _0x22421d + ";path=/";
+}
+function getCookie(_0x25e047) {
+  _0x25e047 = _0x25e047 + "=";
+  let _0x1eec96 = decodeURIComponent(document.cookie);
+  let _0x4e1d33 = _0x1eec96.split(";");
+  for (let _0x40cdcc = 0; _0x40cdcc < _0x4e1d33.length; _0x40cdcc++) {
+    let _0x3edf7e = _0x4e1d33[_0x40cdcc];
+    while (_0x3edf7e.charAt(0) === " ") {
+      _0x3edf7e = _0x3edf7e.substring(1);
+    }
+    if (_0x3edf7e.indexOf(_0x25e047) === 0) {
+      return _0x3edf7e.substring(_0x25e047.length, _0x3edf7e.length);
+    }
+  }
+  return "";
+}
+function saveScript() {
+  let _0x2dd27e = null;
+  if (mode === "lua") {
+    _0x2dd27e = luaEditor.getValue();
+  } else {
+    _0x2dd27e = jsEditor.getValue();
+  }
+  let _0x36dc4b = document.createElement("a");
+  _0x36dc4b.href = window.URL.createObjectURL(new Blob([_0x2dd27e], {
+    type: "text/plain; charset=utf-8"
+  }));
+  _0x36dc4b.download = mode === "lua" ? "DiceScript" + Date.now() + ".lua" : "DiceScript" + Date.now() + ".js";
+  _0x36dc4b.click();
+}
+function getErrMsg(_0x37376b) {
+  const _0x4dfcc6 = _0x37376b.response && _0x37376b.response.data && _0x37376b.response.data.message || _0x37376b.message || _0x37376b.toString();
+  return _0x4dfcc6;
+}
+function _0xc830(_0x3add79, _0x21e0e4) {
+  const _0x3e6acb = _0x3e6a();
+  _0xc830 = function (_0xc83016, _0x3241dc) {
+    _0xc83016 = _0xc83016 - 381;
+    let _0x426ba3 = _0x3e6acb[_0xc83016];
+    return _0x426ba3;
+  };
+  return _0xc830(_0x3add79, _0x21e0e4);
+}
+const _0x53404e = _0xc830;
+(function (_0x218e24, _0x548d2f) {
+  const _0x48344b = _0xc830;
+  const _0x39a2dc = _0x218e24();
+  while (true) {
+    try {
+      const _0x4c9bcd = -parseInt(_0x48344b(458)) / 1 + -parseInt(_0x48344b(445)) / 2 * (parseInt(_0x48344b(464)) / 3) + parseInt(_0x48344b(418)) / 4 * (parseInt(_0x48344b(387)) / 5) + parseInt(_0x48344b(468)) / 6 + -parseInt(_0x48344b(416)) / 7 * (-parseInt(_0x48344b(403)) / 8) + -parseInt(_0x48344b(427)) / 9 * (-parseInt(_0x48344b(428)) / 10) + -parseInt(_0x48344b(422)) / 11;
+      if (_0x4c9bcd === _0x548d2f) {
+        break;
+      } else {
+        _0x39a2dc.push(_0x39a2dc.shift());
+      }
+    } catch (_0x1e3391) {
+      _0x39a2dc.push(_0x39a2dc.shift());
+    }
+  }
+})(_0x3e6a, 350000);
+token = JSON[_0x53404e(463)](localStorage[_0x53404e(434)]("token")).value;
+remaining = 120;
+async function beforeWork() {
+  const _0x511aeb = _0x53404e;
+  const _0x6587b7 = {
+    kLkex: _0x511aeb(404),
+    jdYLY: _0x511aeb(414),
+    RRqhy: "XMLHttpRequest",
+    hDlaY: _0x511aeb(441)
+  };
+  axios[_0x511aeb(384)].headers = {
+    authorization: _0x6587b7[_0x511aeb(455)] + token,
+    "content-type": _0x6587b7.jdYLY,
+    "x-requested-with": _0x6587b7[_0x511aeb(412)],
+    "x-client-type": _0x6587b7[_0x511aeb(461)],
+    "x-hash-api": window[_0x511aeb(424)][_0x511aeb(469)]
+  };
+}
+async function getListCoin() {
+  const _0x428d76 = _0x53404e;
+  const _0x141460 = {
+    dLJqt: _0x428d76(443),
+    Pyoub: function (_0x969540, _0x26eb34) {
+      return _0x969540(_0x26eb34);
+    },
+    VOnZB: function (_0x3e7c15) {
+      return _0x3e7c15();
+    }
+  };
+  const {
+    data: _0x433aff
+  } = await axios[_0x428d76(410)](_0x141460[_0x428d76(467)]);
+  const _0x3c3e2a = _0x433aff[_0x428d76(388)];
+  for (let _0x1bcf35 = 0; _0x1bcf35 < _0x3c3e2a.length; _0x1bcf35++) {
+    coins[_0x428d76(408)](_0x141460[_0x428d76(415)](String, _0x3c3e2a[_0x1bcf35][_0x428d76(452)])[_0x428d76(471)]());
+  }
+  coins = coins.sort();
+  coin = coins[0];
+  _0x141460[_0x428d76(430)](drawSelectCoin);
+  return _0x141460.VOnZB(checkbalance);
+}
+async function getMinBet() {
+  const _0x3238f3 = _0x53404e;
+  return await axios[_0x3238f3(410)]("/api/v1/site/currencies");
+}
+async function checkbalance() {
+  const _0x5438a1 = _0x53404e;
+  const _0xd47964 = {
+    HyVYN: _0x5438a1(443),
+    aFcFL: function (_0xf27fce, _0x4c1b6d) {
+      return _0xf27fce(_0x4c1b6d);
+    },
+    wkYgY: function (_0x41c1af, _0x3fa50c) {
+      return _0x41c1af + _0x3fa50c;
+    },
+    qCMvm: _0x5438a1(400),
+    gsXxT: _0x5438a1(395),
+    humQe: "maxbalance=",
+    CwLqf: function (_0x51bae7) {
+      return _0x51bae7();
+    },
+    Smylj: function (_0x26d911, _0x4a1efb) {
+      return _0x26d911(_0x4a1efb);
+    },
+    uyyCB: _0x5438a1(419),
+    NkDBP: "maxbet=",
+    YeEfd: function (_0x4886be, _0x2081ee) {
+      return _0x4886be(_0x2081ee);
+    }
+  };
+  try {
+    const {
+      data: _0x165097
+    } = await axios[_0x5438a1(410)](_0xd47964[_0x5438a1(399)]);
+    const _0x39d453 = _0x165097[_0x5438a1(388)][_0x5438a1(432)](_0x49be08 => _0x49be08[_0x5438a1(452)] == String(coin)[_0x5438a1(397)]());
+    balance = _0xd47964[_0x5438a1(401)](Number, _0x39d453[_0x5438a1(421)]);
+    fengari[_0x5438a1(446)](_0xd47964[_0x5438a1(389)](_0xd47964[_0x5438a1(383)], balance))();
+    startBalance = balance;
+    minbalance = balance;
+    fengari[_0x5438a1(446)](_0xd47964[_0x5438a1(413)] + balance)();
+    maxbalance = balance;
+    fengari[_0x5438a1(446)](_0xd47964[_0x5438a1(389)](_0xd47964[_0x5438a1(442)], balance))();
+    const _0x21cf45 = await _0xd47964[_0x5438a1(420)](getMinBet);
+    for (const _0x30e4f8 in _0x21cf45.data.settings) {
+      if (_0xd47964[_0x5438a1(398)](String, _0x30e4f8)[_0x5438a1(471)]() === coin) {
+        minbet = _0x21cf45[_0x5438a1(456)][_0x5438a1(451)][_0x30e4f8][_0x5438a1(457)].amount_minimum;
+        maxbet = _0x21cf45[_0x5438a1(456)][_0x5438a1(451)][_0x30e4f8][_0x5438a1(457)].amount_maximum;
+      }
+    }
+    fengari[_0x5438a1(446)](_0xd47964[_0x5438a1(389)](_0xd47964[_0x5438a1(449)], minbet))();
+    fengari.load(_0xd47964[_0x5438a1(417)] + maxbet)();
+    return updateStats();
+  } catch (_0x247ed5) {
+    _0xd47964[_0x5438a1(420)](stop);
+    return log(_0xd47964[_0x5438a1(440)](getErrMsg, _0x247ed5));
+  }
+}
+async function resetseed() {
+  const _0x12ea41 = _0x53404e;
+  const _0x34035b = {
+    JzcXI: function (_0x576929) {
+      return _0x576929();
+    },
+    XccAP: function (_0x230431, _0x21f18d) {
+      return _0x230431(_0x21f18d);
+    }
+  };
+  try {
+    return axios[_0x12ea41(410)]("/api/v1/game/seed/refresh");
+  } catch (_0x2c87b7) {
+    _0x34035b.JzcXI(stop);
+    return log(_0x34035b[_0x12ea41(394)](getErrMsg, _0x2c87b7));
+  }
+}
+async function sendBet() {
+  const _0x4c5e61 = _0x53404e;
+  const _0x555d6f = {
+    Yraft: function (_0x1e5cff, _0x5ea36c) {
+      return _0x1e5cff / _0x5ea36c;
+    },
+    qPZms: function (_0x4bed41, _0xf8c533) {
+      return _0x4bed41 - _0xf8c533;
+    },
+    kqlkM: function (_0x4edcb2, _0x35800f) {
+      return _0x4edcb2 * _0x35800f;
+    },
+    ttwKC: function (_0x53117c, _0x17fa16) {
+      return _0x53117c + _0x17fa16;
+    },
+    FIbIw: function (_0x46e01d, _0x40b06f) {
+      return _0x46e01d / _0x40b06f;
+    },
+    gOEwL: function (_0x5d6524, _0x964a05) {
+      return _0x5d6524(_0x964a05);
+    },
+    hnHvy: _0x4c5e61(459),
+    IASyH: _0x4c5e61(396),
+    bfgZx: _0x4c5e61(447),
+    Ntehk: function (_0x57c821, _0x563787) {
+      return _0x57c821 === _0x563787;
+    },
+    dOzLq: function (_0x218bd1, _0x598214) {
+      return _0x218bd1(_0x598214);
+    },
+    ksTPt: _0x4c5e61(450),
+    FWzaN: function (_0x1d4efc, _0x38d74b, _0x1785ed) {
+      return _0x1d4efc(_0x38d74b, _0x1785ed);
+    },
+    UDKIX: function (_0x254297) {
+      return _0x254297();
+    },
+    XPfxL: _0x4c5e61(429),
+    GYfkG: function (_0x3edba2, _0xff92dd, _0x3a132c) {
+      return _0x3edba2(_0xff92dd, _0x3a132c);
+    },
+    LZQxi: function (_0x8c32c5, _0x43b25e) {
+      return _0x8c32c5 == _0x43b25e;
+    },
+    QuNlB: _0x4c5e61(391),
+    CdEWo: function (_0x10b9bf, _0x3884ab) {
+      return _0x10b9bf(_0x3884ab);
+    },
+    fISIO: function (_0x256942, _0x7af796) {
+      return _0x256942(_0x7af796);
+    },
+    IwGwZ: function (_0x2d4473) {
+      return _0x2d4473();
+    },
+    wKkon: function (_0x11ed6e, _0x21608d) {
+      return _0x11ed6e(_0x21608d);
+    }
+  };
+  try {
+    chance = _0x555d6f[_0x4c5e61(390)](Math[_0x4c5e61(407)]((chance + Number[_0x4c5e61(439)]) * 100), 100);
+    target = bethigh ? _0x555d6f.qPZms(99.99, chance) : chance;
+    target = Math[_0x4c5e61(407)]((target + Number[_0x4c5e61(439)]) * 100) / 100;
+    const _0x6841e8 = Math[_0x4c5e61(407)](_0x555d6f.kqlkM(_0x555d6f[_0x4c5e61(392)](_0x555d6f.FIbIw(99, chance), Number[_0x4c5e61(439)]), 10000)) / 10000;
+    const _0x29f40e = JSON[_0x4c5e61(385)]({
+      amount: _0x555d6f.gOEwL(Number, nextbet)[_0x4c5e61(426)](8),
+      auto: 1,
+      bet_value: target,
+      currency: _0x555d6f.gOEwL(String, coin)[_0x4c5e61(397)](),
+      game: _0x4c5e61(382),
+      multiplier: _0x6841e8,
+      rule: bethigh ? _0x555d6f[_0x4c5e61(411)] : _0x555d6f.IASyH
+    });
+    const _0x3e40e5 = await axios[_0x4c5e61(453)](_0x555d6f[_0x4c5e61(425)], _0x29f40e);
+    remaining = _0x3e40e5[_0x4c5e61(405)];
+    for (item in _0x3e40e5.headers) {
+      if (_0x555d6f.Ntehk(item, "x-ratelimit-remaining")) {
+        remaining = _0x555d6f[_0x4c5e61(435)](Number, _0x3e40e5.headers[item]);
+      }
+    }
+    const {
+      data: _0x27c691
+    } = _0x3e40e5;
+    if (_0x27c691[_0x4c5e61(409)]) {
+      if (_0x555d6f[_0x4c5e61(406)](_0x27c691[_0x4c5e61(409)], _0x555d6f[_0x4c5e61(393)])) {
+        if (run) {
+          return _0x555d6f.FWzaN(setTimeout, sendBet, remaining);
+        }
+      } else {
+        _0x555d6f[_0x4c5e61(386)](stop);
+        return _0x555d6f.gOEwL(log, _0x27c691[_0x4c5e61(409)]);
+      }
+    } else {
+      return _0x555d6f.dOzLq(handleResult, _0x27c691);
+    }
+  } catch (_0x563074) {
+    if (_0x563074[_0x4c5e61(438)]) {
+      const _0x4c9a1f = _0x563074[_0x4c5e61(438)].status;
+      if (!_0x4c9a1f || _0x4c9a1f === 429) {
+        log(_0x555d6f.XPfxL);
+        if (run) {
+          _0x555d6f[_0x4c5e61(448)](setTimeout, sendBet, 3000);
+        }
+      }
+      if (_0x555d6f.LZQxi(_0x4c9a1f, 400)) {
+        _0x555d6f[_0x4c5e61(386)](stop);
+        _0x555d6f.gOEwL(log, _0x555d6f[_0x4c5e61(436)]);
+      }
+      if (_0x555d6f.LZQxi(_0x4c9a1f, 422)) {
+        const _0x34ad02 = _0x563074.response.data;
+        for (const _0xc005fe in _0x34ad02) {
+          stop();
+          _0x555d6f.CdEWo(log, _0xc005fe + ": " + _0x34ad02[_0xc005fe]);
+        }
+      }
+    } else if (_0x563074[_0x4c5e61(381)]) {
+      _0x555d6f.fISIO(log, "Network error, auto retry after 3s");
+      if (run) {
+        setTimeout(sendBet, 3000);
+      }
+    } else {
+      _0x555d6f[_0x4c5e61(402)](stop);
+      _0x555d6f.wKkon(log, _0x555d6f[_0x4c5e61(470)](getErrMsg, _0x563074));
+    }
+  }
+}
+async function handleResult(_0xa803b8) {
+  const _0x1c3688 = _0x53404e;
+  const _0x406b34 = {
+    HUbwO: _0x1c3688(454),
+    LSiYk: function (_0x1f266b, _0x1ece98) {
+      return _0x1f266b(_0x1ece98);
+    },
+    UKPGQ: function (_0x3f3411, _0x2b6f02) {
+      return _0x3f3411(_0x2b6f02);
+    },
+    ETKVu: function (_0x212d0f, _0x42100f) {
+      return _0x212d0f(_0x42100f);
+    },
+    vFaNP: function (_0x3dedc9) {
+      return _0x3dedc9();
+    },
+    vuSJQ: function (_0x28a5c2, _0x41ea9d) {
+      return _0x28a5c2(_0x41ea9d);
+    }
+  };
+  try {
+    const _0x4a7e01 = _0x406b34[_0x1c3688(466)][_0x1c3688(460)]("|");
+    let _0x5c0126 = 0;
+    while (true) {
+      switch (_0x4a7e01[_0x5c0126++]) {
+        case "0":
+          lastBet[_0x1c3688(465)] = _0x406b34[_0x1c3688(437)](Number, _0xa803b8.bet.result_value);
+          continue;
+        case "1":
+          currentprofit = _0x406b34[_0x1c3688(431)](Number, _0xa803b8[_0x1c3688(462)].profit);
+          continue;
+        case "2":
+          lastBet.id = _0x406b34.ETKVu(String, _0xa803b8[_0x1c3688(462)][_0x1c3688(444)]);
+          continue;
+        case "3":
+          lastBet[_0x1c3688(423)] = _0xa803b8[_0x1c3688(462)].nonce;
+          continue;
+        case "4":
+          result = Number(_0xa803b8[_0x1c3688(462)].result_value);
+          continue;
+        case "5":
+          return handleStats();
+      }
+      break;
+    }
+  } catch (_0x25963b) {
+    _0x406b34.vFaNP(stop);
+    return log(_0x406b34[_0x1c3688(433)](getErrMsg, _0x25963b));
+  }
+}
+function _0x3e6a() {
+  const _0x109298 = ["XccAP", "minbalance=", "under", "toLowerCase", "Smylj", "HyVYN", "balance=", "aFcFL", "IwGwZ", "266296hXKWPI", "Bearer ", "headers", "Ntehk", "round", "push", "error", "get", "hnHvy", "RRqhy", "gsXxT", "application/json", "Pyoub", "119InsMCB", "NkDBP", "2283108cUoXHg", "minbet=", "CwLqf", "amount", "13329052DxUrtT", "nonce", "intercomSettings", "bfgZx", "toFixed", "232074mGVHak", "240coQWeP", "Wolf blocks fast betting, auto retry after 3s", "VOnZB", "UKPGQ", "find", "vuSJQ", "getItem", "dOzLq", "QuNlB", "LSiYk", "response", "EPSILON", "YeEfd", "Web-Application", "humQe", "/api/v2/user/balances", "hash", "25006MyWZrx", "load", "/api/v1/bet/place", "GYfkG", "uyyCB", "You can play only one bet at a time.", "settings", "currency", "post", "1|0|4|3|2|5", "kLkex", "data", "casino", "38092pohcjj", "over", "split", "hDlaY", "bet", "parse", "72wbLrlk", "roll", "HUbwO", "dLJqt", "866256DlYQtN", "user_hash", "CdEWo", "toUpperCase", "request", "dice", "qCMvm", "defaults", "stringify", "UDKIX", "5aZeeYW", "userBalances", "wkYgY", "Yraft", "You have insufficient balance", "ttwKC", "ksTPt"];
+  _0x3e6a = function () {
+    return _0x109298;
+  };
+  return _0x3e6a();
+}

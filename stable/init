@@ -1,0 +1,84 @@
+window.WDB_ENV = "production";
+window.WDB_MODE = "stable";
+window.WDB_VERSION = 2023;
+if (window.WDB_ENV === "development") {
+  window.WDB_LIB = "http://localhost:8005";
+} else {
+  window.WDB_LIB = "https://lib.mhqb365.com";
+}
+class Resource {
+  static loadScript(_0x285356) {
+    return new Promise((_0x322f51, _0x15b9fa) => {
+      const _0x3e2d25 = document.createElement("script");
+      _0x3e2d25.src = _0x285356;
+      _0x3e2d25.onload = () => _0x322f51();
+      _0x3e2d25.onerror = () => _0x15b9fa("Error loading script: " + _0x285356);
+      document.head.appendChild(_0x3e2d25);
+    });
+  }
+  static loadCSS(_0x13ae69) {
+    return new Promise((_0xe7b6a2, _0xa98022) => {
+      const _0x27b551 = document.createElement("link");
+      _0x27b551.rel = "stylesheet";
+      _0x27b551.type = "text/css";
+      _0x27b551.href = _0x13ae69;
+      _0x27b551.onload = () => _0xe7b6a2();
+      _0x27b551.onerror = () => _0xa98022("Error loading CSS: " + _0x13ae69);
+      document.head.appendChild(_0x27b551);
+    });
+  }
+}
+function makeBoxEnterLicense() {
+  const _0x3ce202 = "\n      <style>\n        #wdbLicenseBox {\n          all: revert;\n          font-family: \"Courier New\", monospace;\n          font-size: 11px!important;\n          text-align: left;\n          background: #fff!important;\n          color: black!important;\n          line-height: 1.5!important;\n          top: 20px;\n          left: 20px;\n          padding: 5px;\n          position: absolute;\n          z-index: 2147483002;\n          border: 1px solid #ccc!important;\n          border-radius: 3px;\n        }\n\n        .wdb-input {\n          all: revert;\n          padding: 2px;\n          border: 1px solid #ccc;\n          border-radius: 3px;\n        }\n        \n        .btn-grad {\n          all: revert;\n          cursor: pointer;\n          background-image: linear-gradient(to right, #ffb347 0%, #ffcc33  51%, #ffb347  100%);\n          text-align: center;\n          transition: 0.5s;\n          padding: 3px;\n          background-size: 200% auto;\n          border: #ffc107;\n          border-radius: 3px;\n        }\n        \n        .btn-grad:hover {\n          background-position: right center;\n          text-decoration: none;\n        }\n        \n        .btn-grad:active {\n          opacity: .65;\n        }\n        \n        .btn-grad:disabled {\n          cursor: auto;\n          opacity: .65;\n          color: #fff;\n        }\n\n        #wdbLicenseAlert {\n          text-align: left!important;\n          color: red;\n          margin-top: 5px;\n        }\n      </style>\n\n      <div id=\"wdbLicenseBox\">\n        <div>Web DiceBot require your license</div>\n        <input type=\"text\" class=\"wdb-input\" id=\"wdbLicenseInput\" />\n        <button id=\"wdbLicenseButton\" class=\"btn-grad\">Save</button>\n        <div id=\"wdbLicenseAlert\">Maybe your license has expired</div>\n      </div>";
+  const _0x125822 = document.createElement("div");
+  _0x125822.id = "wdbWrapLicenseBox";
+  _0x125822.innerHTML = _0x3ce202;
+  document.body.prepend(_0x125822);
+  setTimeout(() => {
+    document.getElementById("wdbLicenseAlert").innerText = "";
+  }, 2000);
+  document.getElementById("wdbLicenseButton").onclick = () => {
+    const _0x21d9e4 = document.getElementById("wdbLicenseInput").value;
+    if (!_0x21d9e4) {
+      document.getElementById("wdbLicenseAlert").innerText = "Enter your license";
+      setTimeout(() => {
+        document.getElementById("wdbLicenseAlert").innerText = "";
+      }, 2000);
+    } else if (_0x21d9e4.length !== 36) {
+      document.getElementById("wdbLicenseAlert").innerText = "Wrong license";
+      setTimeout(() => {
+        document.getElementById("wdbLicenseAlert").innerText = "";
+      }, 2000);
+    } else {
+      localStorage.setItem("license", _0x21d9e4);
+      document.getElementById("wdbLicenseAlert").style.color = "green";
+      document.getElementById("wdbLicenseAlert").innerText = "License saved\nInitializing...";
+      setTimeout(init, 500);
+    }
+  };
+}
+async function init() {
+  try {
+    const _0x238226 = localStorage.getItem("license");
+    if (!_0x238226) {
+      return makeBoxEnterLicense();
+    }
+    const _0x16bfe6 = "\n      <style>\n        #wdbInitializing {\n          all: revert;\n          font-family: \"Courier New\", monospace;\n          font-size: 11px!important;\n          text-align: left;\n          background: #fff!important;\n          color: black!important;\n          line-height: 1.5!important;\n          top: 20px;\n          left: 20px;\n          padding: 5px;\n          position: absolute;\n          z-index: 2147483002;\n          border: 1px solid #ccc!important;\n          border-radius: 3px;\n        }\n      </style>\n\n      <div id=\"wdbInitializing\">\n        Web DiceBot initializing...\n      </div>";
+    const _0x52fc05 = document.createElement("div");
+    _0x52fc05.id = "wdbWrapInitializing";
+    _0x52fc05.innerHTML = _0x16bfe6;
+    document.body.prepend(_0x52fc05);
+    const _0x581da8 = WDB_API + "/" + WDB_MODE + "/main/" + CASINO_GAME + "?license=" + _0x238226;
+    await Resource.loadScript(_0x581da8);
+    await wdbLoader(Resource);
+  } catch (_0x366c37) {
+    if (document.getElementById("wdbLicenseBox")) {
+      document.getElementById("wdbLicenseBox").remove();
+    }
+    if (document.getElementById("wdbInitializing")) {
+      document.getElementById("wdbInitializing").remove();
+    }
+    makeBoxEnterLicense();
+  }
+}
+init();
