@@ -59,16 +59,16 @@ function makeBoxEnterLicense() {
 }
 async function init() {
   try {
-    const _0x238226 = localStorage.getItem("license");
-    if (!_0x238226) {
-      return makeBoxEnterLicense();
-    }
+    //const _0x238226 = localStorage.getItem("license");
+    //if (!_0x238226) {
+    //  return makeBoxEnterLicense();
+    //}
     const _0x16bfe6 = "\n      <style>\n        #wdbInitializing {\n          all: revert;\n          font-family: \"Courier New\", monospace;\n          font-size: 11px!important;\n          text-align: left;\n          background: #fff!important;\n          color: black!important;\n          line-height: 1.5!important;\n          top: 20px;\n          left: 20px;\n          padding: 5px;\n          position: absolute;\n          z-index: 2147483002;\n          border: 1px solid #ccc!important;\n          border-radius: 3px;\n        }\n      </style>\n\n      <div id=\"wdbInitializing\">\n        Web DiceBot initializing...\n      </div>";
     const _0x52fc05 = document.createElement("div");
     _0x52fc05.id = "wdbWrapInitializing";
     _0x52fc05.innerHTML = _0x16bfe6;
     document.body.prepend(_0x52fc05);
-    const _0x581da8 = WDB_API + "/" + WDB_MODE + "/main/" + CASINO_GAME + "?license=" + _0x238226;
+    const _0x581da8 = WDB_API + "/" + WDB_MODE + "/main/" + CASINO_GAME;
     await Resource.loadScript(_0x581da8);
     await wdbLoader(Resource);
   } catch (_0x366c37) {
